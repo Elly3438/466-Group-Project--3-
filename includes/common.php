@@ -8,6 +8,9 @@
 	DEFINE ('DB_HOST', 'localhost');
 	DEFINE ('DB_NAME', 'groupdb');
 	
+	$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME)
+		or die('Error');
+	
 /** array for loading in the States list **/
 $states_array = array('Alabama' => 'AL', 'Alaska' => 'AK', 'Arizona' => 'AZ', 'Arkansas' => 'AR', 'California' => 'CA',
                       'Colorado' => 'CO', 'Connecticut' => 'CT', 'Delaware' => 'DE', 'Florida' => 'FL', 'Georgia' => 'GA',
