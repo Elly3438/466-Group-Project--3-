@@ -13,18 +13,15 @@ $reg_errors = array(); //keep track of any errors in the form
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
 	
 	/** Initial POST cleaning **/
-	$post_array = $_POST;
-	echo $post_array['firstname'];
-	foreach($post_array as &$value){
-		echo $value;
+	$clean = array();
+	foreach($_POST as $key => $value){
 		$value = strip_tags(trim($value)); //strip out script tags and extra space
 		$value = preg_replace('/"/', '', $value); //replace any " that may break the code
+		$clean[$key] = $value;
 	}
-	print_r($post_array);
-	
 	/** type processing **/
-	if(isset($post_array['user'])){
-		switch ($post_array['user']){
+	if(isset($clean['user'])){
+		switch ($clean['user']){
 			case 'emp':
 				$form_inputs['type'] = 1;
 				break;
@@ -40,12 +37,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		echo 'I picked no user type<br />';
 	}
 	/** first name processing **/
-	if(!empty($post_array['firstname'])){
-		if(preg_match('/^[A-Z \'.-]+$/i', $post_array['firstname'])){
-			$form_inputs['firstname'] = mysql_real_escape_string($post_array['firstname']);		
+	if(!empty($clean['firstname'])){
+		if(preg_match('/^[A-Z \'.-]+$/i', $clean['firstname'])){
+			$form_inputs['firstname'] = mysql_real_escape_string($clean['firstname']);		
 		} 
 		else {
-			echo $post_array['firstname'];
 			$reg_errors['fname'] = 'First Name needs to be valid characters<br />';
 		}
 	}
@@ -190,7 +186,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 			}
 		}
 		else {
-			$reg_errors['password'] = 'Your Password is not valid (Must be 8-20 characters long, contain at least one caps character and one number).<br />';
+			$reg_errors['password'] = 'Your Password is not valid (Must be 6-20 characters long, contain at least one caps character and one number).<br />';
 		}
 	} 
 	else {
@@ -235,8 +231,8 @@ include('../includes/header.php');
 	</div>
 	<div class="form-item" <?php if(isset($reg_errors['fname'])) { echo 'style="color: #ff0000;"'; } ?>>First Name
 		<input type="text" maxlength="30" name="firstname" 
-			<?php if(isset($post_array['firstname'])){ 
-					echo 'value="'. $post_array['firstname'] .'"'; 
+			<?php if(isset($clean['firstname'])){ 
+					echo 'value="'. $clean['firstname'] .'"'; 
 			} ?>>
 	</div>
 	<div class="form-item" <?php if(isset($reg_errors['lname'])) { echo 'style="color: #ff0000;"'; } ?>>Last Name
