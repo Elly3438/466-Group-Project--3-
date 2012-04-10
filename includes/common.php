@@ -1,7 +1,11 @@
 <?php
 	/** base url variable **/
-	DEFINE ('BASE_URL', 'http://courses.cs.niu.edu/~cs566304/csci566');
+	#DEFINE ('BASE_URL', 'http://courses.cs.niu.edu/~cs566304/csci566');
+	DEFINE ('BASE_URL', 'http://groupproject.localhost');
 
+	/** define cookie name **/
+	DEFINE ('COOKIE_NAME', 'U$eRn@meL0gGeD!n');
+	
 	/** database variables **/
 	DEFINE ('DB_USER', 'root');
 	DEFINE ('DB_PASSWORD', 'Jeff3438');
@@ -22,5 +26,6 @@ $states_array = array('Alabama' => 'AL', 'Alaska' => 'AK', 'Arizona' => 'AZ', 'A
 					  'Oregon' => 'OR', 'Pennsylvania' => 'PA', 'Rhode Island' => 'RI', 'South Carolina' => 'SC', 'South Dakota' => 'SD',
 					  'Tennessee' => 'TN', 'Texas' => 'TX', 'Utah' => 'UT', 'Vermont' => 'VT', 'Virginia' => 'VA', 'Washington' => 'WA',
 					  'Washington, D.C.' => 'DC', 'West Virginia' => 'WV', 'Wisconsin' => 'WI', 'Wyoming' => 'WY');
+
 
 ?>
