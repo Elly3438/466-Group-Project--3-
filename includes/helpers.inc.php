@@ -318,4 +318,25 @@ function get_user_type($username){
 		return $row->type;
 	}
 }
+
+/** returns info for the current user for the my accounts page
+ *  Arguments: the User's username, and User's type
+ * Author: Jeffrey Bowden
+ */
+function get_user_acc_info($username, $usertype){
+	global $dbc;
+	
+	$query = 'SELECT firstname, lastname, email, street1, street2, zip, state, phone '.
+			 'FROM user '.
+			 'WHERE username = \''. $username .'\'';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		return 0;
+	}
+	else {
+		$row = mysqli_fetch_object($result);
+		return $row;
+	}
+}
 ?>

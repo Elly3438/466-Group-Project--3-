@@ -15,7 +15,9 @@ include('../includes/header.php');
 <div id="page-content">
 <?php 
 if(isset($_SESSION['username'])){
-	if(get_user_type($_SESSION['username']) == 1){?>
+	$username = $_SESSION['username'];
+	$usertype = get_user_type($_SESSION['username']);
+	if($usertype == 1){?>
 	<div class="myaccount-title">Employee Page</div>
 		<div id="tabs-wrapper">
 			<ul class="tabs">
@@ -27,20 +29,46 @@ if(isset($_SESSION['username'])){
 		</div>
 
 <?php } 
-	 elseif(get_user_type($_SESSION['username']) == 2){?>
+	 elseif($usertype == 2){?>
 	<div class="myaccount-title">Customer Page</div>
 		<div id="tabs-wrapper">
 			<ul class="tabs">
-				<li><a href="javascript:void(0);" id="tabs-click" name="custaccount">Account Overview</a></li>
-				<li><a href="javascript:void(0);" id="tabs-click" name="editaccount">Edit Account Info</a></li>
-				<li><a href="javascript:void(0);" id="tabs-click" name="orderhistory">Order History</a></li>
-				<li><a href="javascript:void(0);" id="tabs-click" name="childinfo">Child Info</a></li>
+				<li class="tabs-click active" name="tab1" >Account Overview</li>
+				<li class="tabs-click" name="tab2" >Edit Account Info</li>
+				<li class="tabs-click" name="tab3" >Order History</li>
+				<li class="tabs-click" name="tab4" >Child Info</li>
 			</ul>
+		</div>
+		<div id="tabs-content">
+			<div id="tab1" >
+			<?php $account_info = get_user_acc_info($username, $usertype); ?>
+				<div class="acc-info" style="float: left"><h2>Your Information</h2>
+				 <ul>
+				  <li>Username: <?php echo $username; ?></li>
+				  <li>Email: <?php echo $account_info->email; ?></li>
+				  <li>Name: <?php echo $account_info->firstname .' '. $account_info->lastname; ?></li>
+				  <li>Phone Number: <?php echo $account_info->phone; ?></li>
+				 </ul>
+				 <h3>Address</h3>
+				 <ul>
+				  <li>Street 1: <?php echo $account_info->street1; ?></li>
+				  <li>Street 2: <?php echo $account_info->street2; ?></li>
+				  <li>Zip Code: <?php echo $account_info->zip; ?></li>
+				  <li>State: <?php echo $account_info->state; ?></li>
+				 </ul>
+				</div>
+			</div>
+			<div id="tab2" style="display:none">TAB2
+			</div>
+			<div id="tab3" style="display:none">TAB3
+			</div>
+			<div id="tab4" style="display:none">TAB4
+			</div>
 		</div>
 
 
 <?php }
-	elseif(get_user_type($_SESSION['username']) == 3){?>
+	elseif($usertype == 3){?>
 	<div class="myaccount-title">Teacher Page</div>
 		<div id="tabs-wrapper">
 			<ul class="tabs">
