@@ -24,11 +24,15 @@
 	color: #cccccc;
 }
 
-.tabs li:hover{
+.tabs li a:hover{
 	cursor: pointer;
 	color: #c20c0c;
 }
+.tabs li a{
+	text-decoration:none;
+	color: #cccccc;
+}
 
-.tabs-click.active{
+.tabs-click.active a{
 	color: #c20c0c;
 }

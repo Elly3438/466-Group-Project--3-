@@ -158,7 +158,7 @@ function remove_auth_token($username){
 	}
 }
 
-/** Processes input from the register form
+/** Processes input from the register and edit forms
  *  Arguments: the key and values of the input array and the form's display values
  * Author: Jeffrey Bowden
  */
@@ -240,7 +240,7 @@ function getError($key, $value, $regular, $regular2, $form_values){
 			return $form_values[$key] .' needs to be valid characters and format 888-888-8888<br />';
 		}
 	}
-	elseif($key == 'password1' || $key == 'new-registration' || $key == 'user'){
+	elseif($key == 'password1' || $key == 'new-registration' || $key == 'user' || $key == 'address_change' || $key = 'info_change' || $key == 'password_change'){
 		return '';
 	}
 	else {
@@ -323,10 +323,10 @@ function get_user_type($username){
  *  Arguments: the User's username, and User's type
  * Author: Jeffrey Bowden
  */
-function get_user_acc_info($username, $usertype){
+function get_user_acc_info($username){
 	global $dbc;
 	
-	$query = 'SELECT firstname, lastname, email, street1, street2, zip, state, phone '.
+	$query = 'SELECT u_id, firstname, lastname, email, street1, street2, city, zip, state, phone '.
 			 'FROM user '.
 			 'WHERE username = \''. $username .'\'';
 	
@@ -338,5 +338,49 @@ function get_user_acc_info($username, $usertype){
 		$row = mysqli_fetch_object($result);
 		return $row;
 	}
+}
+
+/** returns child info for the current user for the my accounts page
+ *  Arguments: the User's username
+ * Author: Jeffrey Bowden
+ */
+function get_user_child_info($userid){
+	global $dbc;
+	
+	$query = 'SELECT firstname, lastname, age '.
+			 'FROM child '.
+			 'WHERE u_id = \''. $userid .'\'';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		return 0;
+	}
+	else {
+		return $result;
+	}
+}
+
+/** returns child info for the current user for the my accounts page
+ *  Arguments: the User's username
+ * Author: Jeffrey Bowden
+ */
+function updateUser($username, $form_inputs){
+	global $dbc;
+	
+	$query = 'UPDATE user SET ';
+	foreach($form_inputs as $key => $value){
+		$query .= $key .' = \''. $value .'\', '; 
+	}
+	$query = substr($query, 0, -2);
+	$query .= ' WHERE username = \''. $username .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - not updated '. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully updated your information';
+	}
+	return $msg;
 }
 ?>
