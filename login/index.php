@@ -33,28 +33,33 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 include('../includes/header.php');
 ?>
 
-
-<div id="login-header">LOG IN</div>
-	<?php echo (isset($login_errors['login-error']) ? '<div class="login-error">'. $login_errors['login-error'] .'</div>' : ''); ?>
-<form action="./index.php" method="post" accept-charset="utf-8">
-	<div class="form-item" <?php echo (isset($login_errors['username']) ? 'style="color: #ff0000;"' : ''); ?>>
-		<label for="username">Username</label>
-		<input type="text" maxlength="20" name="username" id="username" 
-			value="<?php echo (isset($clean['username']) ? $clean['username'] : ''); ?>" >
-	</div>
-	<?php echo (isset($login_errors['username']) ? '<div class="login-error">'. $login_errors['username'] .'</div>' : ''); ?>
-	<div class="form-item" <?php echo (isset($login_errors['password']) ? 'style="color: #ff0000;"' : ''); ?>>
-		<label for="password">Password</label>
-		<input type="password" maxlength="20" name="password" id="password" >
-	</div>
-	<?php echo (isset($login_errors['password']) ? '<div class="login-error">'. $login_errors['password'] .'</div>' : ''); ?>
-	<div class="form-item">
-		<label for="remember">Remember me?</label>
-		<input type="checkbox" name="remember" id="remember" value="yes" >
-	</div>
-	<div class="form-item">
-		<button type="submit" name="user-login" value="1">Log In</button>
-	</div>
-</form>
-
-<div id="login-signup">Not a member? <a href="../register">Sign up!</a></div>
+<div id="login">
+	<form action="./index.php" method="post" accept-charset="utf-8">
+		<h1>LOG IN</h1>
+			<?php echo (isset($login_errors['login-error']) ? '<div class="login-error">'. $login_errors['login-error'] .'</div>' : ''); ?>
+		<div class="form-item" <?php echo (isset($login_errors['username']) ? 'style="color: #ff0000;"' : ''); ?>>
+			<label for="username">Username:</label>
+			<input type="text" maxlength="20" name="username" id="username" 
+				value="<?php echo (isset($clean['username']) ? $clean['username'] : ''); ?>" >
+		</div>
+		<?php echo (isset($login_errors['username']) ? '<div class="login-error">'. $login_errors['username'] .'</div>' : ''); ?>
+		<div class="form-item" <?php echo (isset($login_errors['password']) ? 'style="color: #ff0000;"' : ''); ?>>
+			<label for="password">Password:</label>
+			<input type="password" maxlength="20" name="password" id="password" >
+		</div>
+		<?php echo (isset($login_errors['password']) ? '<div class="login-error">'. $login_errors['password'] .'</div>' : ''); ?>
+		<div class="form-item">
+			<label for="remember">&nbsp;</label>
+			<input type="checkbox" name="remember" id="remember" value="yes" >
+			Remember me?
+		</div>
+		<div class="form-item">
+			<button type="submit" name="user-login" value="1">Log In</button>
+		</div>
+		
+		<h2>Not a member? <a href="../register">Sign up!</a></h2>
+	</form>
+</div>
+<?php
+	include('../includes/footer.php');
+?>
