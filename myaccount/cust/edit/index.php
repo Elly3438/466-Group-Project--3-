@@ -2,7 +2,6 @@
 require('../../../includes/common.php');
 require('../../../includes/helpers.inc.php');
 require('../../../includes/begin.php');
-include('../../../includes/header.php');
 
 /***Processing the edit form submissions ***/
 $form_inputs = array(); //Store sql form values
@@ -150,11 +149,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			echo $msg;
 		}
 		else {
-			//log in and redirect
 			echo $msg;
 		}
 	}
 }
+
+include('../../../includes/header.php');
 
 if(isset($_SESSION['username'])){
 	$username = $_SESSION['username'];
