@@ -99,9 +99,6 @@ function setLoggedIn($username, $password, $remember){
 		return true;
 	}
 	else {
-		session_start();
-		
-		$_SESSION['loginerror'] = 'There was an error logging you into the system';
 		return false;
 	}
 	
@@ -382,5 +379,59 @@ function updateUser($username, $form_inputs){
 		$msg = 'Successfully updated your information';
 	}
 	return $msg;
+}
+
+/** adds a child to the database
+ *  Arguments: the User's username
+ * Author: Jeffrey Bowden
+ */
+function addChild($u_id, $arr){
+	global $dbc;
+	
+	$query = 'INSERT INTO child (
+			    u_id,
+			    firstname,
+			    lastname,
+			    age
+			  )
+			  VALUES (
+			    \''. $u_id .'\',
+			    \''. $arr['firstname'] .'\',
+			    \''. $arr['lastname'] .'\',
+			    \''. $arr['age'] .'\' )';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - not added to database'. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully added '. $arr['firstname'] .' to the database!<br />';
+	}
+	
+	return $msg;
+}
+
+/** builds an array of the current teachers in the system
+ *  Arguments: the User's username
+ * Author: Jeffrey Bowden
+ */
+function build_teacher_list(){
+	global $dbc;
+	
+	$query = 'SELECT u_id, firstname, lastname '.
+			 'FROM user '.
+			 'WHERE type = 3;';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die ('Error '. mysqli_errno($dbc) .'<br />');
+	}
+	else {
+		$temparr = array();
+		while($row = mysqli_fetch_object($result)){
+			$temparr[$row->u_id] = $row->firstname .' '. $row->lastname;
+		}
+		return $temparr;
+	}
 }
 ?>
