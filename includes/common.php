@@ -8,7 +8,7 @@
 	
 	/** database variables **/
 	DEFINE ('DB_USER', 'root');
-	DEFINE ('DB_PASSWORD', 'Jeff3438');
+	DEFINE ('DB_PASSWORD', '');
 	DEFINE ('DB_HOST', 'localhost');
 	DEFINE ('DB_NAME', 'groupdb');
 	

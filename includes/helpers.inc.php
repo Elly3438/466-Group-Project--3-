@@ -101,7 +101,7 @@ function setLoggedIn($username, $password, $remember){
 	else {
 		session_start();
 		
-		$_SESSION['loginerror'] = 'There was an error logging you into the system';
+		$_SESSION['loginerror'] = 'There was an erro5r logging you into the system';
 		return false;
 	}
 	

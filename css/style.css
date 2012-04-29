@@ -1,6 +1,6 @@
 @CHARSET "ISO-8859-1";
 /** CSS goes in here **/
-
+	
 #tabs-wrapper{
 	width: 800px;
 	margin: 0 auto;
@@ -35,4 +35,128 @@
 
 .tabs-click.active a{
 	color: #c20c0c;
+}
+
+/******* Edited by Steven D.  ************/
+
+div.search-prod-view{
+	
+	width:740px;
+	height:900px;
+	
+	margin-left:180px;
+	padding:10px 10px;
+	
+	background-color: #000;
+	
+	
+	
+	
+}
+div.search-narrow-view{
+
+	float:left;
+width:160px;
+height:930px;
+margin:0;
+padding:10px;
+	background-color: #CCCCCC;
+	
+	
+}
+
+div.search-page-content{
+  width: 900px;
+  height:930px;
+  
+  padding:20px auto;
+  margin: 0 auto;
+  background-color: #F0f0FF;
+  position:relative;
+
+}
+div.element
+{
+  margin: 2px;
+  border: 1px solid #0000ff;
+  height: auto;
+  width: auto;
+  float: left;
+  text-align: center;
+  position:relative;
+  background-color:#f0f0f0;
+}	
+div.element img
+{
+  display: inline;
+  margin: 3px;
+  border: 1px solid #ffffff;
+}
+div.element a:hover img {border: 1px solid #0000ff;}
+div.desc
+{
+  text-align: center;
+  font-weight: normal;
+  width: 200px;
+  margin: 2px;
+}
+div.search-pager
+{
+	width:"640px";
+	height:"20px";
+	background-color:#DDD;
+	clear:all;
+	
+	
+}
+div.product-page-content{
+  width: 900px;
+  height:930px;
+  
+  padding:20px auto;
+  margin: 0 auto;
+  background-color: #F0f0FF;
+  position:relative;
+
+}
+div.container-vi{
+  width: 900px;
+  height:30px;
+  
+  padding:20px auto;
+  margin: 0 auto;
+  background-color: #000;
+  position:relative;
+
+}
+p.title{
+	color:#FFF;
+}
+div.photo-view{
+  width: 300px;
+  height:300px;
+  float:left;
+  padding:10px;
+  background-color: #FFF;
+  
+}
+
+div.product-info-view{
+  width: 580px;
+  height: 300px;
+  margin-left:320px;
+  padding:10px;
+  background-color: #FFF;
+  float:left;
+
+}
+div.product-desc-view {
+  width: 880px;
+  height:320px;
+  
+  padding:10px;
+  background-color: #FFF;
+  clear:both;
+  position:relative;
+
 }
