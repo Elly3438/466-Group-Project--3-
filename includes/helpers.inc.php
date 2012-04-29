@@ -341,13 +341,21 @@ function get_user_acc_info($username){
  *  Arguments: the User's username
  * Author: Jeffrey Bowden
  */
-function get_user_child_info($userid){
+function get_user_child_info($id, $type){
 	global $dbc;
 	
-	$query = 'SELECT firstname, lastname, age '.
-			 'FROM child '.
-			 'WHERE u_id = \''. $userid .'\'';
-	
+	if ($type == 'user'){
+		$query = 'SELECT child_id, firstname, lastname, age '.
+				 'FROM child '.
+				 'WHERE u_id = \''. $id .'\' '.
+				 'AND active = 1';
+	}
+	elseif ($type == 'child'){
+		$query = 'SELECT child_id, firstname, lastname, age '.
+				 'FROM child '.
+				 'WHERE child_id = \''. $id .'\' '.
+				 'AND active = 1';
+	}
 	$result = mysqli_query($dbc, $query);
 	if(!$result){
 		return 0;
@@ -357,8 +365,8 @@ function get_user_child_info($userid){
 	}
 }
 
-/** returns child info for the current user for the my accounts page
- *  Arguments: the User's username
+/** updates User's information
+ *  Arguments: the User's username and an array containing the form inputs
  * Author: Jeffrey Bowden
  */
 function updateUser($username, $form_inputs){
@@ -392,13 +400,15 @@ function addChild($u_id, $arr){
 			    u_id,
 			    firstname,
 			    lastname,
-			    age
+			    age,
+			    active
 			  )
 			  VALUES (
 			    \''. $u_id .'\',
 			    \''. $arr['firstname'] .'\',
 			    \''. $arr['lastname'] .'\',
-			    \''. $arr['age'] .'\' )';
+			    \''. $arr['age'] .'\',
+			    1 )';
 	
 	$result = mysqli_query($dbc, $query);
 	if(!$result){
@@ -433,5 +443,119 @@ function build_teacher_list(){
 		}
 		return $temparr;
 	}
+}
+/** updates child information
+ *  Arguments: the User's username
+ * Author: Jeffrey Bowden
+ */
+function updateChild($child, $form_inputs){
+	global $dbc;
+	
+	$query = 'UPDATE child SET ';
+	foreach($form_inputs as $key => $value){
+		$query .= $key .' = \''. $value .'\', '; 
+	}
+	$query = substr($query, 0, -2);
+	$query .= ' WHERE child_id = \''. $child .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - not updated '. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully updated your information';
+	}
+	return $msg;
+}
+/** updates child and teacher relation
+ *  Arguments: user id, child id, and teacher id
+ * Author: Jeffrey Bowden
+ */
+function updateChildTeacher($u_id, $child_id, $teacher_id, $oldteacher){
+	global $dbc;
+	
+	$query = 'UPDATE teacher_child_rel SET '.
+				 'date_end = CURDATE() '.
+				 'WHERE child_id = \''. $child_id .'\''.
+				 'AND DATE(date_end) = \'0000-00-00\';';
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - '. mysqli_errno($dbc) .'<br />';
+	}
+	else{
+		if($teacher_id != ''){
+			$query = 'INSERT INTO teacher_child_rel (
+				    teacher_u_id,
+				    u_id,
+				    child_id,
+				    date_start,
+				    date_end
+				  )
+				  VALUES (
+				    \''. $teacher_id .'\',
+				    \''. $u_id .'\',
+				    \''. $child_id .'\',
+				    CURDATE(),
+				    \'0000-00-00\' )';
+			
+			$result = mysqli_query($dbc, $query);
+			if(!$result){
+				$msg = 'Error - not updated '. mysqli_errno($dbc) .'<br />';
+			}
+			else {
+				$msg = 'Successfully updated your information<br />';
+			}
+		}
+		else{
+			$msg = 'Successfully updated your information<br />';
+		}
+	}
+	return $msg;
+}
+/** returns the child's current teacher
+ *  Arguments: child id
+ * Author: Jeffrey Bowden
+ */
+function get_child_teacher($child){
+	global $dbc;
+	
+	$query = 'SELECT teacher_u_id '.
+			 'FROM teacher_child_rel '.
+			 'WHERE child_id = \''. $child .'\' '.
+			 'AND DATE(date_end) = \'0000-00-00\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die ('Error '. mysqli_errno($dbc) .'<br />');
+	}
+	else{
+		if($result->num_rows != 0){
+			$row = mysqli_fetch_object($result);
+			return $row->teacher_u_id;
+		}
+		else{
+			return '';
+		}
+	}
+}
+/** returns child's id number
+ *  Arguments: none
+ * Author: Jeffrey Bowden
+ */
+function deactivateChild($child_id){
+	global $dbc;
+	
+	$query = 'UPDATE child SET '.
+			 'active = 0 '.
+			 'WHERE child_id = \''. $child_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - child not deleted '. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully removed child<br />';
+	}
+	return $msg;
 }
 ?>

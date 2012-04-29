@@ -161,7 +161,6 @@ if(isset($_SESSION['username'])){
 	$usertype = get_user_type($_SESSION['username']);
 ?>
 
-<div class="myaccount-title">Customer Page</div>
 		<div id="tabs-wrapper">
 			<ul class="tabs">
 				<li class="tabs-click" ><a href="../">Account Overview</a></li>
@@ -179,8 +178,9 @@ if(isset($_SESSION['username'])){
 	      }
 	    ?>
 		<div id="tab-content" style="width: 800px; margin: 0 auto">
-		  <div class="edit-box" style="float: left"><h2>Edit Your Information</h2>
+		  <div class="edit-box">
 		    <form action="./index.php" method="post" accept-charset="utf-8">
+		    <h2>Edit Your Information</h2>
 		      <div class="form-item" <?php echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>
 		        <label for="firstname">First Name</label>
 		        <input type="text" maxlength="30" name="firstname" id="firstname" 
@@ -206,8 +206,9 @@ if(isset($_SESSION['username'])){
 	          </div>
 	        </form>
 	        </div>
-	        <div class="edit-box" style="float: left; margin-left: 30px"><h2>Address Information</h2>
+	        <div class="edit-box">
 	        <form action="./index.php" method="post" accept-charset="utf-8">
+	        <h2>Address Information</h2>
 	          <div class="form-item" <?php echo (isset($reg_errors['street1']) ? 'style="color: #ff0000;"' : ''); ?>>
 		        <label for="street1" >Street 1</label>
 		        <input type="text" maxlength="100" name="street1" id="street1" 
@@ -247,8 +248,9 @@ if(isset($_SESSION['username'])){
 	          </div>
 		    </form>
 		    </div>
-		    <div class="edit-box" style="float: left; margin-left: 30px"><h2>Change Password</h2>
+		    <div class="edit-box">
 		    <form action="./index.php" method="post" accept-charset="utf-8">
+		    <h2>Change Password</h2>
 		      <div class="form-item" <?php echo (isset($reg_errors['password']) ? 'style="color: #ff0000;"' : ''); ?>>
 		        <label for="password">Password</label>
 		        <input type="password" maxlength="20" name="password" id="password" 

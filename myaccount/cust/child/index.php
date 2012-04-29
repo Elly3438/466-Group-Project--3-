@@ -41,7 +41,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 			}
 		}
 		if(empty($reg_errors)){
-			/** update user info **/
+			/** add child info **/
 		
 			//prepare each value for secure sql entry
 			foreach($clean as $key => $value){
@@ -50,6 +50,82 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		
 			$msg = addChild($account_info->u_id, $form_inputs); //add the child
 		
+			if(preg_match('/^Error/', $msg)){
+				echo $msg;
+			}
+			else {
+				unset($clean);
+				echo $msg;
+			}
+		}
+	}
+	elseif(isset($_POST['delete_child'])) {
+		$child_id = mysqli_real_escape_string($dbc, $_POST['child']);
+		
+		$msg = deactivateChild($child_id); //deactivate the child
+
+		if(preg_match('/^Error/', $msg)){
+			echo $msg;
+		}
+		else {
+			unset($clean);
+			echo $msg;
+		}
+	}
+	elseif(isset($_POST['update_child'])) {
+		unset($clean['update_child']);
+		
+		$child_id = mysqli_real_escape_string($dbc, $clean['child']);
+		
+		unset($clean['child']);
+		
+		$child = get_user_child_info($child_id, 'child');
+		
+		$child = mysqli_fetch_object($child);
+		
+		$teacher_id = mysqli_real_escape_string($dbc, $clean['teacher']);
+		$current_teach = get_child_teacher($child_id);
+		$msg = '';
+		if($teacher_id != $current_teach){
+			$msg = updateChildTeacher($account_info->u_id, $child_id, $teacher_id, $current_teach);
+		}
+
+		unset($clean['teacher']);
+		
+		foreach($clean as $key => $value){
+			if($value == $child->$key){
+				unset($clean[$key]);
+			}
+		}
+		
+		/** process the form values and retrieve any errors **/
+		if(!empty($clean)){
+			foreach($clean as $key => $value){
+				if(!empty($clean[$key])){
+					$error = processInput($key, $value, $form_values);
+					if($error != ''){
+						$reg_errors[$key] = $error;
+					}
+				}
+				else {
+					if($key =='age'){
+						$reg_errors[$key] = 'You need to enter an '. $form_values[$key] .'<br />';
+					}
+					else{
+						$reg_errors[$key] = 'You need to enter a '. $form_values[$key] .'<br />';
+					}
+				}
+			}
+		}
+		if(empty($reg_errors) && !empty($clean)){
+			/** update child info **/
+		
+			//prepare each value for secure sql entry
+			foreach($clean as $key => $value){
+				$form_inputs[$key] = mysqli_real_escape_string($dbc, $value);
+			}
+			$msg .= updateChild($child_id, $form_inputs); //update the child
+
 			if(preg_match('/^Error/', $msg)){
 				echo $msg;
 			}
@@ -68,7 +144,6 @@ if(isset($_SESSION['username'])){
 	$usertype = get_user_type($_SESSION['username']);
 ?>
 
-<div class="myaccount-title">Customer Page</div>
 		<div id="tabs-wrapper">
 			<ul class="tabs">
 				<li class="tabs-click" ><a href="../">Account Overview</a></li>
@@ -88,7 +163,7 @@ if(isset($_SESSION['username'])){
 		<div id="tab-content" style="width: 800px; margin: 0 auto">
 		  <div class="child-list-box" style="width:800px; float: left"><h2>Edit Child Information</h2>
 		  <?php
-		  		$child_info = get_user_child_info($account_info->u_id); 
+		  		$child_info = get_user_child_info($account_info->u_id, 'user'); 
 				if($child_info->num_rows == 0) {
 					echo 'You currently do not have any children registered.';
 				}
@@ -97,35 +172,38 @@ if(isset($_SESSION['username'])){
 				$i = 1; ?>
 				<ul style="list-style-type: none; padding: 0">
 					<?php while($row = mysqli_fetch_object($child_info)){ ?>
-					<li style="height: 20px">
-					<form action="./index.php" method="post" accept-charset="utf-8">
-					  <ul style="list-style-type: none; padding: 0;">
+					<li>
+					<form action="./index.php" id="child-update" method="post" accept-charset="utf-8">
+					  <ul style="list-style-type: none; float: left; padding: 0;">
 					    <li style="float: left">
-					      <label for="firstname" <?php echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>First Name</label>
-		        		  <input style="width: 80px" type="text" maxlength="30" name="firstname" id="firstname" 
-						  value="<?php echo (isset($clean['firstname']) ? $clean['firstname'] : $row->firstname); ?>" ></li>
-						<li style="float: left; margin-left: 20px">
-						  <label for="lastname" <?php echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>Last Name</label>
-		        		  <input style="width: 80px" type="text" maxlength="30" name="lastname" id="lastname" 
-						  value="<?php echo (isset($clean['lastname']) ? $clean['lastname'] : $row->lastname); ?>" ></li>
-						<li style="float: left; margin-left: 20px">
-						  <label for="age" <?php echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>Age</label>
-		        		  <input style="width: 20px" type="text" maxlength="2" name="age" id="age" 
-						  value="<?php echo (isset($clean['age']) ? $clean['age'] : $row->age); ?>" ></li>
-						<li style="float: left; margin-left: 20px">
-						  <label for="teacher">Teacher</label>
-							<select name="teacher" size="1" id="teacher">
+					      <label for="firstname<?php echo $i; ?>" <?php #echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>First Name</label>
+		        		  <input type="text" maxlength="30" name="firstname" id="firstname<?php echo $i; ?>" 
+						  value="<?php echo $row->firstname; ?>" ></li>
+						<li>
+						  <label for="lastname<?php echo $i; ?>" <?php #echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>Last Name</label>
+		        		  <input type="text" maxlength="30" name="lastname" id="lastname<?php echo $i; ?>" 
+						  value="<?php echo $row->lastname; ?>" ></li>
+						<li>
+						  <label for="age<?php echo $i; ?>" <?php #echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>Age</label>
+		        		  <input type="text" maxlength="2" name="age" id="age<?php echo $i; ?>" 
+						  value="<?php echo $row->age; ?>" ></li>
+						<li>
+						  <label for="teacher<?php echo $i; ?>">Teacher</label>
+							<select name="teacher" size="1" id="teacher<?php echo $i; ?>">
 							<option value>--</option>
-							<?php foreach($teacher_list as $teach_id => $teach_name){
-							if(isset($clean['state'])){ $clean['state'] == $teach_name ? $teachselect = 'selected' : $teachselect = ''; }
-							echo '<option value="'. $teach_id .'" '. $teachselect .'>'. $teach_name .'</option>';
+							<?php $teacher_id = get_child_teacher($row->child_id);
+							echo $teacher_id;
+							foreach($teacher_list as $teach_id => $teach_name){
+								$teacher_id == $teach_id ? $teachselect = 'selected' : $teachselect = '';
+								echo '<option value="'. $teach_id .'" '. $teachselect .'>'. $teach_name .'</option>';
 							}
 							?>
 							</select>
-						<li style="float: left; margin-left: 20px">
-		        			<button type="submit" name="update_child" value="1">Delete</button></li>
-		        		<li style="float: left; margin-left: 20px">
-		        			<button type="submit" name="update_child" value="2">Update</button></li>
+							<input type="hidden" name="child" id="child"
+							value="<?php echo $row->child_id; ?>"></li>
+						<li>
+		        			<button type="submit" name="delete_child" value="1">Delete</button>
+		        			<button type="submit" name="update_child" value="1">Update</button></li>
 					</ul></form></li>
 					<?php $i++;
 						} ?>
@@ -134,22 +212,23 @@ if(isset($_SESSION['username'])){
 				}
 				?>
 		  </div>
-		  <div class="child-add-box" style="float: left"><h2>Add a Child</h2>
+		  <div class="child-add-box" style="float: left">
 		    <form action="./index.php" method="post" accept-charset="utf-8">
-		      <div class="form-item" <?php echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>
+		     <h2>Add a Child</h2>
+		      <div class="form-item" <?php #echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>
 		        <label for="firstname">First Name</label>
 		        <input type="text" maxlength="30" name="firstname" id="firstname" 
-			value="<?php echo (isset($clean['firstname']) ? $clean['firstname'] : ''); ?>" > 
+			value="<?php #echo (isset($clean['firstname']) ? $clean['firstname'] : ''); ?>" > 
 	          </div>
-	          <div class="form-item" <?php echo (isset($reg_errors['lastname']) ? 'style="color: #ff0000;"' : ''); ?>>
+	          <div class="form-item" <?php #echo (isset($reg_errors['lastname']) ? 'style="color: #ff0000;"' : ''); ?>>
 		        <label for="firstname">Last Name</label>
 		        <input type="text" maxlength="30" name="lastname" id="lastname" 
-			     value="<?php echo (isset($clean['lastname']) ? $clean['lastname'] : ''); ?>" > 
+			     value="<?php #echo (isset($clean['lastname']) ? $clean['lastname'] : ''); ?>" > 
 	          </div>
-	          <div class="form-item" <?php echo (isset($reg_errors['age']) ? 'style="color: #ff0000;"' : ''); ?>>
+	          <div class="form-item" <?php #echo (isset($reg_errors['age']) ? 'style="color: #ff0000;"' : ''); ?>>
 		        <label for="age">Age</label>
 		        <input type="text" maxlength="2" name="age" id="age" 
-			value="<?php echo (isset($clean['age']) ? $clean['age'] : ''); ?>" > 
+			value="<?php #echo (isset($clean['age']) ? $clean['age'] : ''); ?>" > 
 	          </div>
 	          <div class="form-item">
 		        <button type="submit" name="add_child" value="1">Add Child</button>

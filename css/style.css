@@ -1,41 +1,6 @@
 @CHARSET "ISO-8859-1";
 /** CSS goes in here **/
 
-#tabs-wrapper{
-	width: 800px;
-	margin: 0 auto;
-}
-
-.tabs{
-	list-style-type: none;
-	height: 50px;
-}
-
-.tabs li{
-	width: 150px;
-	height: 30px;
-	border: 1px solid #cccccc;
-	float: left;
-	text-align: center;
-	font-size: 14px;
-	font-weight: bold;
-	line-height: 30px;
-	margin-right: 5px;
-	color: #cccccc;
-}
-
-.tabs li a:hover{
-	cursor: pointer;
-	color: #c20c0c;
-}
-.tabs li a{
-	text-decoration:none;
-	color: #cccccc;
-}
-
-.tabs-click.active a{
-	color: #c20c0c;
-}
 * {
   margin: 0;
   padding: 0;
@@ -371,4 +336,90 @@ a:hover{
   height: 40px;
   
   clear: both;
+}
+
+/** 
+	My Account styles
+	Author: Jeffrey Bowden
+**/
+#tabs-wrapper{
+	width: 645px;
+	margin: 15px auto 0;
+}
+
+.tabs{
+	list-style-type: none;
+	height: 50px;
+}
+
+.tabs li{
+	width: 150px;
+	height: 30px;
+	border: 1px solid #cccccc;
+	float: left;
+	text-align: center;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 30px;
+	margin-right: 5px;
+	color: #cccccc;
+}
+
+.tabs li a:hover{
+	cursor: pointer;
+	color: #c20c0c;
+}
+.tabs li a{
+	text-decoration:none;
+	color: #cccccc;
+}
+
+.tabs-click.active a{
+	color: #c20c0c;
+}
+
+#main .child-add-box form h2, #main .edit-box form h2{
+	text-align: left;
+	padding-top: 5px;
+	padding-left: 5px;
+}
+
+#main .child-list-box form {
+	float: left;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+#main .child-list-box form button {
+	margin-left: 80px;
+	float: left;
+}
+
+#main .acc-info{
+	float: left;
+	width: 350px;
+}
+
+#main .acc-info ul{
+	float: left;
+	margin-bottom: 20px;
+}
+
+#main .acc-info li{
+	float: left;
+	width: 350px;
+	margin-bottom: 5px;
+}
+
+#main .acc-info h2{
+	margin-top: 15px;
+	color: #3a3a3a;
+}
+
+#main .edit-link{
+	margin-top:5px;
+}
+
+#main .edit-link a:hover{
+	color: #c20c0c;
 }
