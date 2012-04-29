@@ -22,10 +22,23 @@
   	}
 	
 ?>
-<form action="../search/index.php" align="left" method="get" class="search-form">
+
+<?php
+$searchdir = "";
+
+if (file_exists("../search/index.php"))
+{
+	$searchdir = "../search/index.php";
+}
+else 
+{
+		$searchdir = "search/index.php";
+}
+echo '<form action="' . $searchdir .'" align="left" method="get" class="search-form">
 	<input type="text" size="35" name="p1" class="searchBox" value="" />
 	<input type="submit" value="Start Searching!" />
-</form>
+</form>'
 
+?>
 <!-- added parts -->
 </div>
