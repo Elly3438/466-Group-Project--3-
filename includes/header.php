@@ -2,14 +2,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>Kimball Music</title>
-	<link rel="stylesheet" type="text/css" href="/css/style.css" />
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-	<script type="text/javascript" src="/js/main.js"></script>
+<title>Kimball Music</title>
+<link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<title>Kimball Music</title>
+<link rel="stylesheet" type="text/css" href="/css/style.css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<title>Kimball Music</title>
+<link type="text/css" rel="stylesheet" media="all" href="../css/style.css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
 </head>
 <body>
 	<div id="wrapper">
-
 		<div id="upper">
 			<div id="phonenumber">
 				Questions? Call us at 800-555-1234
@@ -35,7 +42,6 @@
 				</ul>
 			</div>
 		</div>
-
 		<div id="header">
 			<div id="title">
 				<a href="/">Kimball Music</a>
@@ -74,3 +80,9 @@
 		</div>
 		
 		<div id="main">
+		<?php /**
+<form action="../search/index.php" align="left" method="get" class="search-form">
+	<input type="text" size="35" name="p1" class="searchBox" value="" />
+	<input type="submit" value="Start Searching!" />
+</form>
+**/ ?>

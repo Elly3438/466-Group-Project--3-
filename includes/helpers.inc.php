@@ -99,6 +99,9 @@ function setLoggedIn($username, $password, $remember){
 		return true;
 	}
 	else {
+		session_start();
+		
+		$_SESSION['loginerror'] = 'There was an error logging you into the system';
 		return false;
 	}
 	
