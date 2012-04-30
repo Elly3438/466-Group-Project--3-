@@ -102,6 +102,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if(!empty($clean)){
 			foreach($clean as $key => $value){
 				if(!empty($clean[$key])){
+					echo $key .' | ';
+					echo $value;
 					$error = processInput($key, $value, $form_values);
 					if($error != ''){
 						$reg_errors[$key] = $error;
@@ -133,6 +135,19 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 				unset($clean);
 				echo $msg;
 			}
+		}
+	}
+	elseif(isset($_POST['inst_cancel'])) {
+		$order_merch_id = mysqli_real_escape_string($dbc, $_POST['order_merch_id']);
+		
+		$msg = deactivateInst($order_merch_id); //deactivate the instrument
+
+		if(preg_match('/^Error/', $msg)){
+			echo $msg;
+		}
+		else {
+			unset($clean);
+			echo $msg;
 		}
 	}
 }
@@ -170,7 +185,7 @@ if(isset($_SESSION['username'])){
 				else { 
 				$teacher_list = build_teacher_list(); 
 				$i = 1; ?>
-				<ul style="list-style-type: none; padding: 0">
+				<ul style="list-style-type: none; padding: 0; float: left;">
 					<?php while($row = mysqli_fetch_object($child_info)){ ?>
 					<li>
 					<form action="./index.php" id="child-update" method="post" accept-charset="utf-8">
@@ -202,9 +217,32 @@ if(isset($_SESSION['username'])){
 							<input type="hidden" name="child" id="child"
 							value="<?php echo $row->child_id; ?>"></li>
 						<li>
-		        			<button type="submit" name="delete_child" value="1">Delete</button>
-		        			<button type="submit" name="update_child" value="1">Update</button></li>
+		        			<button type="submit" name="delete_child" value="1">Delete</button></li>
+		        			<li><button type="submit" name="update_child" value="1">Update</button></li>
 					</ul></form></li>
+					<li><div class="child-instrument">
+					<h2>Current Instruments for <?php echo $row->firstname; ?></h2>
+					<?php $child_inst_info = get_current_child_inst_info($row->child_id); 
+						if($child_inst_info->num_rows != 0){
+							while($irow = mysqli_fetch_object($child_inst_info)){ ?>
+						<ul>
+						<li>Instrument: <?php echo $irow->name; ?></li>
+						<li>Serial Number: <?php echo $irow->serial_num;?></li>
+						<li>Rental Start Date: <?php echo $irow->rent_start_date; ?></li>
+						<li>Rental Rate: $<?php echo $irow->rental_total;?> per <?php echo $irow->time_period == 'M' ? 'Month' : 'Quarter'; ?></li>
+						<li>Total Applied to this Instrument: $<?php echo $irow->total_rent_applied; ?></li>
+						<li><form action="./index.php" id="inst-cancel" method="post" accept-charset="utf-8">
+							<input type="hidden" name="order_merch_id" value="<?php echo $irow->order_merch_id; ?>">
+							<button type="submit" name="inst_cancel" value="1">Cancel</button>
+						</form></li>
+						</ul>
+						<?php }
+						}
+						else{
+							echo 'No instruments';
+						}
+					?>
+					</div></li>
 					<?php $i++;
 						} ?>
 				</ul>

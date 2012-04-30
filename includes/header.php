@@ -6,14 +6,6 @@
 <link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/main.js"></script>
-<title>Kimball Music</title>
-<link rel="stylesheet" type="text/css" href="/css/style.css" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script type="text/javascript" src="/js/main.js"></script>
-<title>Kimball Music</title>
-<link type="text/css" rel="stylesheet" media="all" href="../css/style.css" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script type="text/javascript" src="/js/main.js"></script>
 </head>
 <body>
 	<div id="wrapper">
@@ -28,6 +20,7 @@
 						<?php
 							if(isset($_SESSION['firstname'])){
 								echo 'Welcome, '. $_SESSION['firstname'] .'! | ';
+								echo '<a href="/myaccount/">My Account</a> | ';
 								echo '<a href="/login/logout.php">Log Out</a>';
 							}
 							else {

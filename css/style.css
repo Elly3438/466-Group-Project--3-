@@ -297,7 +297,8 @@ a:hover{
   background: #d0d0d0;
   color: #585858;
   
-  text-shadow: white 0.1em 0.1em 0.2em
+  text-shadow: white 0.1em 0.1em 0.2em;
+  cursor:pointer;
 }
 
 #footer{
@@ -426,6 +427,49 @@ a:hover{
 	color: #c20c0c;
 }
 
+#main .child-instrument{
+	margin-top: 50px;
+	margin-left: 20px;
+}
+
+#main .child-instrument ul{
+	width: 300px;
+	float: left;
+}
+
+#main .child-instrument form{
+	width: 300px;
+	margin: 0;
+	background: none;
+}
+
+#main .child-instrument form button{
+	margin: 0;
+}
+
+#main .child-instrument h2{
+	font-size: 16px;
+}
+
+#main .cust-orders{
+	width: 800px;
+	margin: 0 auto;
+	text-align: left;
+	border-collapse: collapse;
+}
+
+#main .cust-orders th{
+	border-bottom: 2px solid #cccccc;
+}
+
+#main .cust-orders td{
+	padding: 3px 3px;
+	border-bottom: 1px solid #cccccc;
+}
+
+#main .cust-orders .odd{
+	background: #eeeeee;
+}
 /******* Edited by Steven D.  ************/
 
 div.search-prod-view{
