@@ -240,7 +240,7 @@ function getError($key, $value, $regular, $regular2, $form_values){
 			return $form_values[$key] .' needs to be valid characters and format 888-888-8888<br />';
 		}
 	}
-	elseif($key == 'password1' || $key == 'new-registration' || $key == 'user' || $key == 'address_change' || $key = 'info_change' || $key == 'password_change'){
+	elseif($key == 'password1' || $key == 'new-registration' || $key == 'user' || $key == 'address_change' || $key == 'info_change' || $key == 'password_change'){
 		return '';
 	}
 	else {
@@ -344,13 +344,21 @@ function get_user_acc_info($username){
  *  Arguments: the User's username
  * Author: Jeffrey Bowden
  */
-function get_user_child_info($userid){
+function get_user_child_info($id, $type){
 	global $dbc;
 	
-	$query = 'SELECT firstname, lastname, age '.
-			 'FROM child '.
-			 'WHERE u_id = \''. $userid .'\'';
-	
+	if ($type == 'user'){
+		$query = 'SELECT child_id, firstname, lastname, age '.
+				 'FROM child '.
+				 'WHERE u_id = \''. $id .'\' '.
+				 'AND active = 1';
+	}
+	elseif ($type == 'child'){
+		$query = 'SELECT child_id, firstname, lastname, age '.
+				 'FROM child '.
+				 'WHERE child_id = \''. $id .'\' '.
+				 'AND active = 1';
+	}
 	$result = mysqli_query($dbc, $query);
 	if(!$result){
 		return 0;
@@ -360,8 +368,8 @@ function get_user_child_info($userid){
 	}
 }
 
-/** returns child info for the current user for the my accounts page
- *  Arguments: the User's username
+/** updates User's information
+ *  Arguments: the User's username and an array containing the form inputs
  * Author: Jeffrey Bowden
  */
 function updateUser($username, $form_inputs){
@@ -382,5 +390,303 @@ function updateUser($username, $form_inputs){
 		$msg = 'Successfully updated your information';
 	}
 	return $msg;
+}
+
+/** adds a child to the database
+ *  Arguments: the User's username
+ * Author: Jeffrey Bowden
+ */
+function addChild($u_id, $arr){
+	global $dbc;
+	
+	$query = 'INSERT INTO child (
+			    u_id,
+			    firstname,
+			    lastname,
+			    age,
+			    active
+			  )
+			  VALUES (
+			    \''. $u_id .'\',
+			    \''. $arr['firstname'] .'\',
+			    \''. $arr['lastname'] .'\',
+			    \''. $arr['age'] .'\',
+			    1 )';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - not added to database'. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully added '. $arr['firstname'] .' to the database!<br />';
+	}
+	
+	return $msg;
+}
+
+/** builds an array of the current teachers in the system
+ *  Arguments: the User's username
+ * Author: Jeffrey Bowden
+ */
+function build_teacher_list(){
+	global $dbc;
+	
+	$query = 'SELECT u_id, firstname, lastname '.
+			 'FROM user '.
+			 'WHERE type = 3;';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die ('Error '. mysqli_errno($dbc) .'<br />');
+	}
+	else {
+		$temparr = array();
+		while($row = mysqli_fetch_object($result)){
+			$temparr[$row->u_id] = $row->firstname .' '. $row->lastname;
+		}
+		return $temparr;
+	}
+}
+/** updates child information
+ *  Arguments: the User's username
+ * Author: Jeffrey Bowden
+ */
+function updateChild($child, $form_inputs){
+	global $dbc;
+	
+	$query = 'UPDATE child SET ';
+	foreach($form_inputs as $key => $value){
+		$query .= $key .' = \''. $value .'\', '; 
+	}
+	$query = substr($query, 0, -2);
+	$query .= ' WHERE child_id = \''. $child .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - not updated '. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully updated your information';
+	}
+	return $msg;
+}
+/** updates child and teacher relation
+ *  Arguments: user id, child id, and teacher id
+ * Author: Jeffrey Bowden
+ */
+function updateChildTeacher($u_id, $child_id, $teacher_id, $oldteacher){
+	global $dbc;
+	
+	$query = 'UPDATE teacher_child_rel SET '.
+				 'date_end = CURDATE() '.
+				 'WHERE child_id = \''. $child_id .'\''.
+				 'AND DATE(date_end) = \'0000-00-00\';';
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - '. mysqli_errno($dbc) .'<br />';
+	}
+	else{
+		if($teacher_id != ''){
+			$query = 'INSERT INTO teacher_child_rel (
+				    teacher_u_id,
+				    u_id,
+				    child_id,
+				    date_start,
+				    date_end
+				  )
+				  VALUES (
+				    \''. $teacher_id .'\',
+				    \''. $u_id .'\',
+				    \''. $child_id .'\',
+				    CURDATE(),
+				    \'0000-00-00\' )';
+			
+			$result = mysqli_query($dbc, $query);
+			if(!$result){
+				$msg = 'Error - not updated '. mysqli_errno($dbc) .'<br />';
+			}
+			else {
+				$msg = 'Successfully updated your information<br />';
+			}
+		}
+		else{
+			$msg = 'Successfully updated your information<br />';
+		}
+	}
+	return $msg;
+}
+/** returns the child's current teacher
+ *  Arguments: child id
+ * Author: Jeffrey Bowden
+ */
+function get_child_teacher($child){
+	global $dbc;
+	
+	$query = 'SELECT teacher_u_id '.
+			 'FROM teacher_child_rel '.
+			 'WHERE child_id = \''. $child .'\' '.
+			 'AND DATE(date_end) = \'0000-00-00\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die ('Error '. mysqli_errno($dbc) .'<br />');
+	}
+	else{
+		if($result->num_rows != 0){
+			$row = mysqli_fetch_object($result);
+			return $row->teacher_u_id;
+		}
+		else{
+			return '';
+		}
+	}
+}
+/** returns child's id number
+ *  Arguments: none
+ * Author: Jeffrey Bowden
+ */
+function deactivateChild($child_id){
+	global $dbc;
+	
+	$query = 'UPDATE child SET '.
+			 'active = 0 '.
+			 'WHERE child_id = \''. $child_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - child not deleted '. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully removed child<br />';
+	}
+	return $msg;
+}
+/** returns child's instrument information
+ *  Arguments: none
+ * Author: Jeffrey Bowden
+ */
+function get_current_child_inst_info($child_id){
+	global $dbc;
+	
+	$query = 'SELECT name, order_merch_id, serial_num, rent_start_date, time_period, rental_total, total_rent_applied '.
+			 'FROM order_merch_item AS a '.
+			 'INNER JOIN merch_item AS b ON a.rent_merch_id = b.merch_id '.
+			 'WHERE child_id = \''. $child_id .'\' '.
+			 'AND DATE(rent_end_date) = \'0000-00-00\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	else {
+		return $result;
+	}
+}
+/** returns child's instrument information
+ *  Arguments: none
+ * Author: Jeffrey Bowden
+ */
+function deactivateInst($order_merch_id){
+	global $dbc;
+	
+	$query = 'UPDATE order_merch_item SET '.
+			 'rent_end_date = CURDATE() '.
+			 'WHERE order_merch_id = \''. $order_merch_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - instrument not cancelled '. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully cancelled instrument<br />';
+	}
+	return $msg;
+	
+}
+/** returns user's general order information
+ *  Arguments: user's id
+ * Author: Jeffrey Bowden
+ */
+function get_cust_order_info($u_id){
+	global $dbc;
+	
+	$query = 'SELECT * FROM cust_order '.
+			 'WHERE u_id = \''. $u_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	else{
+		return $result;
+	}
+}
+/** returns total purchases for an order
+ *  Arguments: user's id
+ * Author: Jeffrey Bowden
+ */
+function get_sum_purchases($order_id){
+	global $dbc;
+	
+	$query = 'SELECT COUNT(*) AS total '.
+			 'FROM order_merch_item '.
+			 'WHERE order_id = \''. $order_id .'\' '.
+			 'AND purch_merch_id IS NOT NULL ;';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	else{
+		$row = mysqli_fetch_object($result);
+		return $row->total;
+	}
+	
+}
+/** returns total rentals for an order
+ *  Arguments: user's id
+ * Author: Jeffrey Bowden
+ */
+function get_sum_rentals($order_id){
+	global $dbc;
+	
+	$query = 'SELECT COUNT(*) AS total '.
+			 'FROM order_merch_item '.
+			 'WHERE order_id = \''. $order_id .'\' '.
+			 'AND rent_merch_id IS NOT NULL ;';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	else{
+		$row = mysqli_fetch_object($result);
+		return $row->total;
+	}
+}
+
+/** Get's product info
+ *  Arguments: The product ID
+ *  Author: Lila Papiernik
+ */
+function get_product_info($product_id){
+	global $dbc;
+	
+	$query = 'SELECT * '.
+			 'FROM merch_item '.
+			 'WHERE merch_id = \''. $product_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die ('Error '. mysqli_errno($dbc) .'<br />');
+	}
+	else{
+		if($result->num_rows != 0){
+			$row = mysqli_fetch_object($result);
+			return $row;
+		}else{
+			return NULL;
+		}
+	}
 }
 ?>

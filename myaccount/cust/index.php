@@ -11,7 +11,6 @@ if(isset($_SESSION['username'])){
 	$usertype = get_user_type($_SESSION['username']);
 ?>
 
-<div class="myaccount-title">Customer Page</div>
 		<div id="tabs-wrapper">
 			<ul class="tabs">
 				<li class="tabs-click active" ><a href="./">Account Overview</a></li>
@@ -22,7 +21,7 @@ if(isset($_SESSION['username'])){
 		</div>
 		<div id="tab-content" style="width: 800px; margin: 0 auto">
 			<?php $account_info = get_user_acc_info($username); ?>
-				<div class="acc-info" style="float: left"><h2>Your Information</h2>
+				<div class="acc-info"><h2>Your Information</h2>
 				 <ul>
 				  <li>Username: <?php echo $username; ?></li>
 				  <li>Email: <?php echo $account_info->email; ?></li>
@@ -36,27 +35,31 @@ if(isset($_SESSION['username'])){
 				  <li>City: <?php echo $account_info->city; ?></li>
 				  <li>Zip Code: <?php echo $account_info->zip; ?></li>
 				  <li>State: <?php echo $account_info->state; ?></li>
-				 </ul>
-				<div class="edit-info" style="font-size: 12px; cursor: pointer"><a href="./edit/">Edit Account Info &raquo;</a></div>
-				</div>
-				<div class="child-info" style="float: left; margin-left: 20px"><h2>Child Information</h2>
-				<?php $child_info = get_user_child_info($account_info->u_id); 
+				  <li><div class="edit-link"><a href="./edit/">Edit Account Info &raquo;</a></div></li>
+				 </ul></div>
+				<div class="acc-info"><h2>Child Information</h2>
+				<?php $child_info = get_user_child_info($account_info->u_id, 'user'); 
 				if($child_info->num_rows == 0) {
 					echo 'You currently do not have any children registered.';
 				}
 				else { ?>
 				 <ul>
-					<?php while($row = mysqli_fetch_object($child_info)){
-						echo '<li>Name: '. $row->firstname .' '. $row->lastname .'</li>';
-						echo '<li>Age: '. $row->age .'</li>';
+					<?php while($row = mysqli_fetch_object($child_info)){ ?>
+						<li>Name: <?php echo $row->firstname .' '. $row->lastname; ?> Age: <?php echo $row->age; ?></li>
+						<?php $child_inst_info = get_current_child_inst_info($row->child_id); 
+						if($child_inst_info->num_rows != 0){
+							while($irow = mysqli_fetch_object($child_inst_info)){ ?>
+							<li>Current Rental Instrument: <?php echo $irow->name; ?></li>
+						<?php }
+						}
+						else{?>
+							<li>No Current Instruments</li>
+					<?php }
 					}
 				}
 				?>
-				 </ul>
-				<div class="edit-info" style="font-size: 12px; cursor: pointer"><a href="./child/">Add/remove children &raquo;</a></div>
-				</div>
-				<div class="current-rentals" style="float: left; margin-left: 20px"><h2>Current Rentals</h2>
-				</div>
+				   <li><div class="edit-link"><a href="./child/">Add/remove children &raquo;</a></div></li>
+				 </ul></div>
 		</div>
 <?php }
 else {
