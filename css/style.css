@@ -1,6 +1,7 @@
 @CHARSET "ISO-8859-1";
-/** CSS goes in here **/
-
+/*
+ * Author: Lila Papiernik
+ */
 * {
   margin: 0;
   padding: 0;
@@ -209,6 +210,17 @@ a:hover{
   padding-bottom: 40px;
   
   margin-bottom: -40px;
+}
+
+div.notice{
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  width: 400px;
+  padding: 30px 0;
+  background: #eee;
+  color: #3e3e3e;
+  margin: 50px auto;
+  text-align:center;
 }
 
 #main form{
