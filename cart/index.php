@@ -34,7 +34,11 @@ function actionsubmit()
 				//Don't add it to the new cart if they want to remove it
 				if(!isset($_POST['delete'.$i])){
 					//Add the product with the quantity specified
-					$tempcart[$j] = array( "id"=>$_SESSION['cart'][$i]['id'], "quantity"=>$_POST['quantity'.$i], "type"=>1 );
+					if(!isset($_POST['rental'.$i]) || !isset($_POST['rent_id'.$i])){
+						$tempcart[$j] = array( "id"=>$_SESSION['cart'][$i]['id'], "quantity"=>$_POST['quantity'.$i], "type"=>isset($_POST['rental'.$i]), "rent_id"=>NULL, "rent_bill"=>NULL, "rent_length"=>NULL );
+					}else{
+						$tempcart[$j] = array( "id"=>$_SESSION['cart'][$i]['id'], "quantity"=>$_POST['quantity'.$i], "type"=>isset($_POST['rental'.$i]), "rent_id"=>$_POST['rent_id'.$i], "rent_bill"=>$_POST['rent_bill'.$i], "rent_length"=>$_POST['rent_length'.$i] );
+					}
 					$j++;
 				}
 			}
@@ -60,8 +64,9 @@ function actionsubmit()
 		}
 		
 		//If the item is new
-		if($new)
-			$_SESSION['cart'][sizeof($_SESSION['cart'])] = array( "id"=>$_POST['merch_id'], "quantity"=>$_POST['quantity'], "type"=>1);
+		if($new){
+			$_SESSION['cart'][sizeof($_SESSION['cart'])] = array( "id"=>$_POST['merch_id'], "quantity"=>$_POST['quantity'], "type"=>isset($_POST['rental']), "rent_id"=>NULL, "rent_bill"=>NULL, "rent_length"=>NULL);
+		}
 	}
 	
 include('../includes/header.php');
@@ -72,12 +77,13 @@ include('../includes/header.php');
 ?>
 	<table>
 		<tr>
-			<td><h1>Delete</h1></td>
-			<td><h1>Quantity</h1></td>
+			<td width="20px"><h1>Remove</h1></td>
+			<td width="40px"><h1>Quantity</h1></td>
 			<td><h1>Name</h1></td>
 			<td><h1>Brand</h1></td>
-			<td><h1>Price</h1></td>
-			<td><h1>Total</h1></td>
+			<td width="20px"><h1>Rental</h1></td>
+			<td width="80px"><h1>Price</h1></td>
+			<td width="80px"><h1>Total</h1></td>
 		</tr>
 		
 		<input type="hidden" name="size" value="<?php echo sizeof($_SESSION['cart']); ?>"\>
@@ -89,21 +95,55 @@ include('../includes/header.php');
 			$total_price += $product_info->unit_price * $_SESSION['cart'][$i]['quantity'];
 ?>
 		<tr>
-			<td><input type="checkbox" name="delete<?php echo $i; ?>"></td>
-			<td><input type="text" name="quantity<?php echo $i; ?>" value="<?php echo $_SESSION['cart'][$i]['quantity']; ?>"></td>
-			<td><?php echo $product_info->name; ?></td>
-			<td><?php echo $product_info->brand; ?></td>
-			<td>$<?php echo $product_info->unit_price; ?></td>
-			<td>$<?php echo $product_info->unit_price * $_SESSION['cart'][$i]['quantity']; ?></td>
+			<td width="20px" style="text-align:center;"><input type="checkbox" name="delete<?php echo $i; ?>"></td>
+			<td width="40px"><input type="text" name="quantity<?php echo $i; ?>" value="<?php echo $_SESSION['cart'][$i]['quantity']; ?>"></td>
+			<td style="text-align:center;"><?php echo $product_info->name; ?></td>
+			<td style="text-align:center;"><?php echo $product_info->brand; ?></td>
+			<td width="40px" style="text-align:center;"><input type="checkbox" name="rental<?php echo $i; ?>" value="true" <?php if($_SESSION['cart'][$i]['type']){ echo'checked';} ?>></td>
+			<td width="80px"><?php if(!$_SESSION['cart'][$i]['type']){echo '$'.$product_info->unit_price;}else{echo '--';} ?></td>
+			<td width="80px"><?php if(!$_SESSION['cart'][$i]['type']){echo '$'.($product_info->unit_price * $_SESSION['cart'][$i]['quantity']);}else{echo '--';} ?></td>
 		</tr>
 <?php
+			if($_SESSION['cart'][$i]['type']){
+?>
+		<tr>
+			<td colspan="4">
+				<select style="width:400px" name="rent_id<?php echo $i; ?>">
+					<option selected value="NULL">Select One.</option>
+					<?php
+						$result = get_rentable_inst($_SESSION['cart'][$i]['id']);
+						for($i=0;$i<$result->num_rows;$i++){
+							$row = mysqli_fetch_object($result);
+							echo '<option ';
+							if($row->serial_num == $_SESSION['cart'][$i]['rent_id']){
+								echo'selected ';
+							}
+							echo 'value="'.$row->serial_num.'">'.$row->serial_num." - ".$row->size." - ".$row->inst_condition." - Quarterly: $".$row->rentfee_quarterly." - Monthly: $".$row->rentfee_monthly.'</option>';
+						}
+					?>
+				</select>
+			</td colspan="2">
+			<td>
+				<select style="width:150px" name="rent_bill<?php echo $i; ?>">
+					<option <?php if(!isset($_SESSION['cart'][$i]['rent_bill'])){ echo'selected';} ?> value="NULL">Select One.</option>
+					<option <?php if(isset($_SESSION['cart'][$i]['rent_bill']) && $_SESSION['cart'][$i]['rent_bill'] == "Q"){ echo'selected';} ?> value="Q">Quarterly</option>
+					<option <?php if(isset($_SESSION['cart'][$i]['rent_bill']) && $_SESSION['cart'][$i]['rent_bill'] == "M"){ echo'selected';} ?> value="M">Monthly</option>
+				</select>
+			</td>
+			<td colspan="1">
+				Length:
+				<input type="text" name="rent_length<?php echo $i; ?>" value="<?php if(isset($_SESSION['cart'][$i]['rent_length'])){echo $_SESSION['cart'][$i]['rent_length'];} ?>" />
+			</td>
+		</tr>
+<?php
+			}
 		}
 		
 		if(sizeof($_SESSION['cart']) > 0){
 ?>
 		<tr>
-			<td colspan="2"><h1>Total price<h1></td>
-			<td colspan="4">$<?php echo $total_price; ?></td>
+			<td colspan="6" ><h1 style="text-align:right;">Total price:<h1></td>
+			<td colspan="1">$<?php echo $total_price; ?></td>
 		</tr>
 		<input type="hidden" name="total" value="<?php echo $total_price; ?>" />
 <?php

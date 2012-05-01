@@ -53,6 +53,8 @@ include('../includes/header.php');
 	<div class="product-purchase">
 		<form action="/cart/" method="post">
 			<input type="hidden" name="merch_id" value="<?php echo ($drow['merch_id']); ?>" />
+			Rental?
+			<input type="checkbox" name="rental" value="true">
 			<input type="text" name="quantity" value="1" />
 			<input type="submit" name="add" value="Purchase" />
 		</form>

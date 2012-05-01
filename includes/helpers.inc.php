@@ -711,4 +711,29 @@ function checkout_logged_in($total_sale){
 	}
 	return $msg;
 }
+
+/** Get's rental items
+ *  Arguments: The product ID
+ *  Author: Lila Papiernik
+ */
+function get_rentable_inst($product_id){
+	global $dbc;
+	
+	$query = 'SELECT * '.
+			 'FROM instrument_inventory '.
+			 'WHERE merch_id = \''. $product_id .'\' '.
+			 'AND status !=\'R\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die ('Error '. mysqli_errno($dbc) .'<br />');
+	}
+	else{
+		if($result->num_rows != 0){
+			return $result;
+		}else{
+			return NULL;
+		}
+	}
+}
 ?>

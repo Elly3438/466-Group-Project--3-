@@ -296,7 +296,7 @@ div.notice{
   width: 200px;
 }
 
-#main form button{
+#main form button, #main form input[type="submit"]{
   width: 75px;
   height: 25px;
   text-align:center;
@@ -315,6 +315,7 @@ div.notice{
 
 #main form.cart{
   width: 800px;
+  padding: 20px;
 }
 
 #main form.cart h1{
@@ -331,14 +332,16 @@ div.notice{
   text-align: right;
 }
 
+#main form input[type="submit"]{
+  width: 175px;
+  text-align: center;
+}
+
 #main form.cart table{
   width: 800px;
-  text-align: right;
-  margin: 20px 0 20px 0;
 }
 
 #main form.cart table tr td{
-  width: 800px;
   text-align: right;
 }
 
