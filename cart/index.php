@@ -25,13 +25,14 @@ function actionsubmit()
 			$tempcart = array();
 			
 			//Loop through each cart item
+			$j=0;
 			for($i=0; $i < $_POST['size']; $i++){
 			
 				//Don't add it to the new cart if they want to remove it
 				if(!isset($_POST['delete'.$i])){
-					
 					//Add the product with the quantity specified
-					$tempcart[$i] = array( "id"=>$_SESSION['cart'][$i]['id'], "quantity"=>$_POST['quantity'.$i], "type"=>1 );
+					$tempcart[$j] = array( "id"=>$_SESSION['cart'][$i]['id'], "quantity"=>$_POST['quantity'.$i], "type"=>1 );
+					$j++;
 				}
 			}
 			
@@ -103,6 +104,7 @@ include('../includes/header.php');
 			<td colspan="2"><h1>Total price<h1></td>
 			<td colspan="4">$<?php echo $total_price; ?></td>
 		</tr>
+		<input type="hidden" name="total" value="<?php echo $total_price; ?>" />
 <?php
 		}
 ?>
