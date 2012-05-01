@@ -690,16 +690,16 @@ function get_product_info($product_id){
 	}
 }
 
-/** Get's product info
- *  Arguments: The product ID
+/** Insert the order
+ *  Arguments: The total sale price
  *  Author: Lila Papiernik
  */
 function checkout_logged_in($total_sale){
 	global $dbc;
 	
 	$query = 'INSERT INTO cust_order (u_id, billing_fname, billing_lname, billing_street1, billing_street2, billing_city, billing_zip, billing_state, billing_phone, order_date, order_total, tax, grand_total, status) '.
-			 'SELECT u_id, firstname, lastname, street1, street2, city, zip, state, phone, "'.date("d-m-Y").'", "'.$total_sale.'", "0", "'.$total_sale.'", "C"'.
-			 'FROM user'.
+			 'SELECT u_id, firstname, lastname, street1, street2, city, zip, state, phone, "'.date("Y-d-m").'", "'.$total_sale.'", "0", "'.$total_sale.'", "C" '.
+			 'FROM user '.
 			 'WHERE firstname="'.$_SESSION['firstname'].'";';
 			 
 	$result = mysqli_query($dbc, $query);

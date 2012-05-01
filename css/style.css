@@ -212,10 +212,11 @@ a:hover{
   margin-bottom: -40px;
 }
 
-#div.notice{
+div.notice{
   -moz-border-radius: 5px;
   border-radius: 5px;
   width: 400px;
+  padding: 30px 0;
   background: #eee;
   color: #3e3e3e;
   margin: 50px auto;

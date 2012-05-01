@@ -42,8 +42,6 @@ function actionsubmit()
 			$_SESSION['cart'] = $tempcart;
 		}
 		
-	} else { //Default cart set
-		$_SESSION['cart'] = array(array( "id"=>1, "quantity"=>1, "type"=>1 ),array( "id"=>2, "quantity"=>1, "type"=>1 ));
 	}
 	
 	
