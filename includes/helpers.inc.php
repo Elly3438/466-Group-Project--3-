@@ -237,7 +237,7 @@ function getError($key, $value, $regular, $regular2, $form_values){
 			return $form_values[$key] .' needs to be valid characters and format 888-888-8888<br />';
 		}
 	}
-	elseif($key == 'password1' || $key == 'new-registration' || $key == 'user' || $key == 'address_change' || $key = 'info_change' || $key == 'password_change'){
+	elseif($key == 'password1' || $key == 'new-registration' || $key == 'user' || $key == 'address_change' || $key == 'info_change' || $key == 'password_change'){
 		return '';
 	}
 	else {
@@ -557,5 +557,133 @@ function deactivateChild($child_id){
 		$msg = 'Successfully removed child<br />';
 	}
 	return $msg;
+}
+/** returns child's instrument information
+ *  Arguments: none
+ * Author: Jeffrey Bowden
+ */
+function get_current_child_inst_info($child_id){
+	global $dbc;
+	
+	$query = 'SELECT name, order_merch_id, serial_num, rent_start_date, time_period, rental_total, total_rent_applied '.
+			 'FROM order_merch_item AS a '.
+			 'INNER JOIN merch_item AS b ON a.rent_merch_id = b.merch_id '.
+			 'WHERE child_id = \''. $child_id .'\' '.
+			 'AND DATE(rent_end_date) = \'0000-00-00\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	else {
+		return $result;
+	}
+}
+/** returns child's instrument information
+ *  Arguments: none
+ * Author: Jeffrey Bowden
+ */
+function deactivateInst($order_merch_id){
+	global $dbc;
+	
+	$query = 'UPDATE order_merch_item SET '.
+			 'rent_end_date = CURDATE() '.
+			 'WHERE order_merch_id = \''. $order_merch_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - instrument not cancelled '. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully cancelled instrument<br />';
+	}
+	return $msg;
+	
+}
+/** returns user's general order information
+ *  Arguments: user's id
+ * Author: Jeffrey Bowden
+ */
+function get_cust_order_info($u_id){
+	global $dbc;
+	
+	$query = 'SELECT * FROM cust_order '.
+			 'WHERE u_id = \''. $u_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	else{
+		return $result;
+	}
+}
+/** returns total purchases for an order
+ *  Arguments: user's id
+ * Author: Jeffrey Bowden
+ */
+function get_sum_purchases($order_id){
+	global $dbc;
+	
+	$query = 'SELECT COUNT(*) AS total '.
+			 'FROM order_merch_item '.
+			 'WHERE order_id = \''. $order_id .'\' '.
+			 'AND purch_merch_id IS NOT NULL ;';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	else{
+		$row = mysqli_fetch_object($result);
+		return $row->total;
+	}
+	
+}
+/** returns total rentals for an order
+ *  Arguments: user's id
+ * Author: Jeffrey Bowden
+ */
+function get_sum_rentals($order_id){
+	global $dbc;
+	
+	$query = 'SELECT COUNT(*) AS total '.
+			 'FROM order_merch_item '.
+			 'WHERE order_id = \''. $order_id .'\' '.
+			 'AND rent_merch_id IS NOT NULL ;';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	else{
+		$row = mysqli_fetch_object($result);
+		return $row->total;
+	}
+}
+
+/** Get's product info
+ *  Arguments: The product ID
+ *  Author: Lila Papiernik
+ */
+function get_product_info($product_id){
+	global $dbc;
+	
+	$query = 'SELECT * '.
+			 'FROM merch_item '.
+			 'WHERE merch_id = \''. $product_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die ('Error '. mysqli_errno($dbc) .'<br />');
+	}
+	else{
+		if($result->num_rows != 0){
+			$row = mysqli_fetch_object($result);
+			return $row;
+		}else{
+			return NULL;
+		}
+	}
 }
 ?>

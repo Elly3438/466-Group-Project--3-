@@ -109,7 +109,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 include('../includes/header.php');
 ?>
 
-<form action="/register/index.php" method="post" accept-charset="utf-8">
+<form class="login" action="/register/index.php" method="post" accept-charset="utf-8">
 	<h1>REGISTRATION</h1>
 	<div class="form-item" <?php echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>
 		<label for="firstname">First Name

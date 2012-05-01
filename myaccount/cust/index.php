@@ -44,16 +44,22 @@ if(isset($_SESSION['username'])){
 				}
 				else { ?>
 				 <ul>
-					<?php while($row = mysqli_fetch_object($child_info)){
-						echo '<li>Name: '. $row->firstname .' '. $row->lastname .'</li>';
-						echo '<li>Age: '. $row->age .'</li>';
+					<?php while($row = mysqli_fetch_object($child_info)){ ?>
+						<li>Name: <?php echo $row->firstname .' '. $row->lastname; ?> Age: <?php echo $row->age; ?></li>
+						<?php $child_inst_info = get_current_child_inst_info($row->child_id); 
+						if($child_inst_info->num_rows != 0){
+							while($irow = mysqli_fetch_object($child_inst_info)){ ?>
+							<li>Current Rental Instrument: <?php echo $irow->name; ?></li>
+						<?php }
+						}
+						else{?>
+							<li>No Current Instruments</li>
+					<?php }
 					}
 				}
 				?>
 				   <li><div class="edit-link"><a href="./child/">Add/remove children &raquo;</a></div></li>
 				 </ul></div>
-				<div class="acc-info" style="float: left; margin-left: 20px"><h2>Current Rentals</h2>
-				</div>
 		</div>
 <?php }
 else {
