@@ -1,4 +1,7 @@
 <?php
+/*
+ * Author: Lila Papiernik
+ */
 	require('../includes/common.php');
 	require('../includes/helpers.inc.php');
 	require('../includes/begin.php');
@@ -6,10 +9,9 @@
 	include('../includes/header.php');
 	
 	if(isset($_SESSION['firstname'])){
-		checkout_logged_in($_POST['total']);
 ?>
 	<div class="notice">
-		Congratulations! Your purchase has been placed.
+		<?php echo checkout_logged_in($_POST['total']); ?>
 	</div>
 <?php
 	}else{

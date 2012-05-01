@@ -3,17 +3,20 @@ function actionsubmit()
 {
   if(document.pressed == 'Update Cart')
   {
-   document.myform.action ="";
+   document.cart.action ="";
   }
   else
   if(document.pressed == 'Checkout')
   {
-    document.myform.action ="/checkout/";
+    document.cart.action ="/checkout/";
   }
   return true;
 }
 </script>
 <?php
+/*
+ * Author: Lila Papiernik
+ */
 	require('../includes/common.php');
 	require('../includes/helpers.inc.php');
 	require('../includes/begin.php');

@@ -707,7 +707,8 @@ function checkout_logged_in($total_sale){
 		$msg = 'Error - order not placed'. mysqli_errno($dbc) .'<br />';
 	}
 	else {
-		$msg = 'Successfully placed order<br />';
+		$msg = 'Congratulations! Your purchase has been placed.';
 	}
 	return $msg;
+}
 ?>
