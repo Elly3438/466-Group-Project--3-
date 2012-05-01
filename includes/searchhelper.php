@@ -1,5 +1,6 @@
 <?php
 	/* Which page should be 0, unless you are planning on picking a specific page*/
+	/* Author: Steven Dingess */
 	function pass_var($value, $var)
 	{
 		$hyperlink = "?";

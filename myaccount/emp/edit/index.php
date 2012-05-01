@@ -1,4 +1,7 @@
-<?php
+<?php /************************************
+--Employee Edit Page--
+Author: Jeffrey Bowden
+*****************************************/
 require('../../../includes/common.php');
 require('../../../includes/helpers.inc.php');
 require('../../../includes/begin.php');
@@ -23,7 +26,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 	}
 	
 	if(isset($_POST['info_change'])) {
-		echo 'Info submitted';
 		
 		/** prepare phone number for processing **/
 		$clean['phone'] = $clean['phone'];
@@ -63,7 +65,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
 	}
 	elseif(isset($_POST['address_change'])) {
-		echo 'Address submitted';
 		
 		unset($clean['address_change']);
 		
@@ -97,7 +98,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}
 	}
 	elseif(isset($_POST['password_change'])) {
-		echo 'Password submitted';
 		
 		unset($clean['password_change']);
 		
@@ -266,7 +266,7 @@ if(isset($_SESSION['username'])){
 		</div>
 <?php }
 else {
-	header('Location: /login/index.php');
+	header('Location: '.BASE_URL.'/login/index.php');
 	exit();
 } ?>
 

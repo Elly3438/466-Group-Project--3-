@@ -1,6 +1,12 @@
 <?php
+
+/** File: common.php
+ *  Holds some of the commonly used variables and any defines
+ *  Author: Jeffrey Bowden
+ */
+
 	/** base url variable **/
-	#DEFINE ('BASE_URL', 'http://courses.cs.niu.edu/~cs566304/csci566');
+	#DEFINE ('BASE_URL', 'http://courses.cs.niu.edu/~cs566304/csci466');
 	DEFINE ('BASE_URL', 'http://groupproject.localhost');
 
 	/** define cookie name **/

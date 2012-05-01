@@ -1,11 +1,13 @@
-<?php #temporary header info ?>
+<?php #temporary header info 
+	  #Authors: Lila Papiernik and Jeffrey Bowden
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Kimball Music</title>
-<link type="text/css" rel="stylesheet" media="all" href="/css/style.css" />
+<link type="text/css" rel="stylesheet" media="all" href="<?php echo BASE_URL; ?>/css/style.css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script type="text/javascript" src="/js/main.js"></script>
+<script type="text/javascript" src="<?php echo BASE_URL; ?>/js/main.js"></script>
 </head>
 <body>
 	<div id="wrapper">
@@ -20,18 +22,18 @@
 						<?php
 							if(isset($_SESSION['firstname'])){
 								echo 'Welcome, '. $_SESSION['firstname'] .'! | ';
-								echo '<a href="/myaccount/">My Account</a> | ';
-								echo '<a href="/login/logout.php">Log Out</a>';
+								echo '<a href="'.BASE_URL.'/myaccount/">My Account</a> | ';
+								echo '<a href="'.BASE_URL.'/login/logout.php">Log Out</a>';
 							}
 							else {
-								echo '<a href="/login/index.php">Log In</a></li>';
+								echo '<a href="'.BASE_URL.'/login/index.php">Log In</a></li>';
 								echo '<li>|</li>';
-								echo '<li><a href="/register">Sign Up</a>';
+								echo '<li><a href="'.BASE_URL.'/register">Sign Up</a>';
 							}
 						?>
 					</li>
 					<li>|</li>
-					<li><a href="/cart">My Cart 
+					<li><a href="<?php echo BASE_URL; ?>/cart">My Cart 
 						<?php
 							if(isset($_SESSION['cart'])){
 								echo '('.sizeof($_SESSION['cart']).')';
@@ -45,15 +47,27 @@
 		</div>
 		<div id="header">
 			<div id="title">
-				<a href="/">Kimball Music</a>
+				<a href="<?php echo BASE_URL; ?>">Kimball Music</a>
 			</div>
 			
 			<div id="search">
+			<?php
+			$searchdir = "";
 			
-				<form action="#">
+			if (file_exists("../search/index.php"))
+			{
+				$searchdir = "../search/index.php";
+			}
+			else 
+			{
+					$searchdir = BASE_URL."/search/index.php";
+			}
+
+			?>
+				<form action="<?php echo $searchdir; ?>" method="get">
 				
 					<fieldset id="searchbox">
-						<input type="text" name="search" value="" />
+						<input type="text" name="p1" value="" />
 					</fieldset>
 					
 					<fieldset id="searchbutton">
@@ -68,11 +82,11 @@
 		<div id="navigation">
 			<div id="links">
 				<ul>
-					<li><a href="#">Violin</a></li>
-					<li><a href="#">Viola</a></li>
-					<li><a href="#">Cello</a></li>
-					<li><a href="#">Bass</a></li>
-					<li><a href="#">Accessories</a></li>
+					<li><a href="<?php echo BASE_URL; ?>/search/index.php?p4=Violin">Violin</a></li>
+					<li><a href="<?php echo BASE_URL; ?>/search/index.php?p4=Viola">Viola</a></li>
+					<li><a href="<?php echo BASE_URL; ?>/search/index.php?p4=Cello">Cello</a></li>
+					<li><a href="<?php echo BASE_URL; ?>/search/index.php?p4=Bass">Bass</a></li>
+					<li><a href="<?php echo BASE_URL; ?>/search/index.php?p4=Accessories">Accessories</a></li>
 				</ul>
 			</div>
 			
@@ -81,9 +95,3 @@
 		</div>
 		
 		<div id="main">
-		<?php /**
-<form action="../search/index.php" align="left" method="get" class="search-form">
-	<input type="text" size="35" name="p1" class="searchBox" value="" />
-	<input type="submit" value="Start Searching!" />
-</form>
-**/ ?>

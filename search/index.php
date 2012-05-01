@@ -4,13 +4,6 @@ require('../includes/helpers.inc.php');
 include('../includes/searchhelper.php');
 require('../includes/begin.php');
 
-if(isset($_SESSION['register'])){
-	echo 'Registration Complete<br />';
-	echo 'Thanks for registering, '. $_SESSION['firstname'] .'...<br />';
-	echo 'Checking for cookie<br />';
-	print_r($_COOKIE);
-}
-
 include('../includes/header.php');
 ?>
 
@@ -133,8 +126,7 @@ include('../includes/header.php');
 						<a href="../products/index.php?p7='. $drow['merch_id'] . '"><img src="'. $picpath .'" width="200" height="200" /></a>
 		 				<div class="desc">
 		 				'. ($drow['name'])  . '<br> Id:
-		 				'. ($drow['merch_id'])  . '<br> Qty: 
-		 				'. ($drow['has_inventory'])  . '<br>
+		 				'. ($drow['merch_id'])  . '<br>
 		 				'. ($drow['unit_price'])  . '<br>
 		 				
 		 				</div>

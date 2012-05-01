@@ -25,7 +25,7 @@ require('../includes/begin.php');
 	
 	if($msg == ''){
 		// Redirect to the home page
-		header('Location: /index.php');
+		header('Location: '.BASE_URL.'/index.php');
 		exit();
 	}
 	else{

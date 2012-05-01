@@ -1,19 +1,7 @@
-<script type="text/javascript">
-function actionsubmit()
-{
-  if(document.pressed == 'Update Cart')
-  {
-   document.myform.action ="";
-  }
-  else
-  if(document.pressed == 'Checkout')
-  {
-    document.myform.action ="/checkout/";
-  }
-  return true;
-}
-</script>
 <?php
+/*
+ * Author: Lila Papiernik
+ */
 	require('../includes/common.php');
 	require('../includes/helpers.inc.php');
 	require('../includes/begin.php');
@@ -25,21 +13,20 @@ function actionsubmit()
 			$tempcart = array();
 			
 			//Loop through each cart item
+			$j=0;
 			for($i=0; $i < $_POST['size']; $i++){
 			
 				//Don't add it to the new cart if they want to remove it
 				if(!isset($_POST['delete'.$i])){
-					
 					//Add the product with the quantity specified
-					$tempcart[$i] = array( "id"=>$_SESSION['cart'][$i]['id'], "quantity"=>$_POST['quantity'.$i], "type"=>1 );
+					$tempcart[$j] = array( "id"=>$_SESSION['cart'][$i]['id'], "quantity"=>$_POST['quantity'.$i], "type"=>1 );
+					$j++;
 				}
 			}
 			
 			$_SESSION['cart'] = $tempcart;
 		}
 		
-	} else { //Default cart set
-		$_SESSION['cart'] = array(array( "id"=>1, "quantity"=>1, "type"=>1 ),array( "id"=>2, "quantity"=>1, "type"=>1 ));
 	}
 	
 	
@@ -64,6 +51,21 @@ function actionsubmit()
 	
 include('../includes/header.php');
 ?>
+<script type="text/javascript">
+function actionsubmit()
+{
+  if(document.pressed == 'Update Cart')
+  {
+   document.cart.action ="";
+  }
+  else
+  if(document.pressed == 'Checkout')
+  {
+    document.cart.action ="http://courses.cs.niu.edu/~cs566304/csci466/checkout/";
+  }
+  return true;
+}
+</script>
 <form class="cart" name="cart" onsubmit="return actionsubmit();" method="post">
 <?php
 	if(isset($_SESSION['cart']) && sizeof($_SESSION['cart']) > 0 ){
@@ -103,6 +105,7 @@ include('../includes/header.php');
 			<td colspan="2"><h1>Total price<h1></td>
 			<td colspan="4">$<?php echo $total_price; ?></td>
 		</tr>
+		<input type="hidden" name="total" value="<?php echo $total_price; ?>" />
 <?php
 		}
 ?>

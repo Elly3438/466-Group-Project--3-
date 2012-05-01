@@ -96,7 +96,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 			if(setLoggedIn($form_inputs['username'], $form_inputs['password'], false)){
 				$_SESSION['register'] = true;
 				header('Location: ../myaccount/');
-				exit();
 			}
 			else{
 				header('Location: ../login/index.php');
@@ -109,7 +108,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 include('../includes/header.php');
 ?>
 
-<form class="login" action="/register/index.php" method="post" accept-charset="utf-8">
+<form class="login" action="./index.php" method="post" accept-charset="utf-8">
 	<h1>REGISTRATION</h1>
 	<div class="form-item" <?php echo (isset($reg_errors['firstname']) ? 'style="color: #ff0000;"' : ''); ?>>
 		<label for="firstname">First Name
@@ -205,6 +204,6 @@ include('../includes/header.php');
 	</div>
 	<h2>Already have an account? <a href="../register">Sign in!</a></h2>
 </form>
-<?php 
+<?php
 	include('../includes/footer.php');
 ?>

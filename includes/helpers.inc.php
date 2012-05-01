@@ -85,7 +85,7 @@ function setLoggedIn($username, $password, $remember){
 		}
 		
 		//store session data		
-		$_SESSION['user'] = $userrow->username;
+		$_SESSION['username'] = $userrow->username;
 		$_SESSION['firstname'] = $userrow->firstname;
 		
 		//store cookie data
@@ -174,6 +174,7 @@ function processInput($key, $value, $form_values){
 			case 'district':
 			case 'street1':
 			case 'street2':
+			case 'age':
 				$regular = '/^[A-Z0-9 \'.-]+$/i';
 				break;
 			case 'zip':
@@ -239,7 +240,7 @@ function getError($key, $value, $regular, $regular2, $form_values){
 			return $form_values[$key] .' needs to be valid characters and format 888-888-8888<br />';
 		}
 	}
-	elseif($key == 'password1' || $key == 'new-registration' || $key == 'user' || $key == 'address_change' || $key == 'info_change' || $key == 'add_school' || $key == 'password_change'){
+	elseif($key == 'password1' || $key == 'new-registration' || $key == 'add_child' || $key == 'user' || $key == 'address_change' || $key == 'info_change' || $key == 'add_school' || $key == 'password_change'){
 		return '';
 	}
 	else {
@@ -852,7 +853,7 @@ function build_acc_list($u_id){
 	
 	$query = 'SELECT merch_id, name '.
 			 'FROM merch_item AS a '.
-			 'WHERE a.category_name = \'Accessory\' '.
+			 'WHERE a.category_name = \'Accessories\' '.
 			 'AND NOT EXISTS ( '.
 				'SELECT merch_id FROM teach_req AS b '.
 				'WHERE a.merch_id = b.merch_id AND b.u_id = \''. $u_id .'\' ) ';
@@ -917,5 +918,27 @@ function get_product_info($product_id){
 			return NULL;
 		}
 	}
+}
+
+/** Insert the order
+ *  Arguments: The total sale price
+ *  Author: Lila Papiernik
+ */
+function checkout_logged_in($total_sale){
+	global $dbc;
+	
+	$query = 'INSERT INTO cust_order (u_id, billing_fname, billing_lname, billing_street1, billing_street2, billing_city, billing_zip, billing_state, billing_phone, order_date, order_total, tax, grand_total, status) '.
+			 'SELECT u_id, firstname, lastname, street1, street2, city, zip, state, phone, "'.date("Y-d-m").'", "'.$total_sale.'", "0", "'.$total_sale.'", "C" '.
+			 'FROM user '.
+			 'WHERE firstname="'.$_SESSION['firstname'].'";';
+			 
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - order not placed'. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Congratulations! Your purchase has been placed.';
+	}
+	return $msg;
 }
 ?>

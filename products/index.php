@@ -4,13 +4,6 @@ require('../includes/helpers.inc.php');
 include('../includes/searchhelper.php');
 require('../includes/begin.php');
 
-if(isset($_SESSION['register'])){
-	echo 'Registration Complete<br />';
-	echo 'Thanks for registering, '. $_SESSION['firstname'] .'...<br />';
-	echo 'Checking for cookie<br />';
-	print_r($_COOKIE);
-}
-
 include('../includes/header.php');
 ?>
 	
@@ -51,7 +44,7 @@ include('../includes/header.php');
 	
 	<div class="product-footer"></div>
 	<div class="product-purchase">
-		<form action="/cart/" method="post">
+		<form action="<?php echo BASE_URL; ?>/cart/" method="post">
 			<input type="hidden" name="merch_id" value="<?php echo ($drow['merch_id']); ?>" />
 			<input type="text" name="quantity" value="1" />
 			<input type="submit" name="add" value="Purchase" />

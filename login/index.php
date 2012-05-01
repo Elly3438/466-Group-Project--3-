@@ -20,34 +20,33 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 	$login_errors = processLogin($clean, $login_errors);
 	
-	if(!empty($login_errors)){
-		foreach($login_errors as $login_error => $val){
-				echo $val;
-		}
-	}
-	else {
-		echo 'You are logged in '. $_SESSION['firstname'];
-	}
+}
+if (isset($_SESSION['username'])){
+	header('Location: '.BASE_URL.'/myaccount/');
 }
 
 include('../includes/header.php');
 ?>
 
 <div id="login">
+	<?php
+	if(!empty($login_errors)){
+			foreach($login_errors as $login_error => $val){
+					echo $val;
+			}
+	}
+	?>
 	<form action="./index.php" method="post" accept-charset="utf-8">
 		<h1>LOG IN</h1>
-			<?php echo (isset($login_errors['login-error']) ? '<div class="login-error">'. $login_errors['login-error'] .'</div>' : ''); ?>
 		<div class="form-item" <?php echo (isset($login_errors['username']) ? 'style="color: #ff0000;"' : ''); ?>>
 			<label for="username">Username:</label>
 			<input type="text" maxlength="20" name="username" id="username" 
 				value="<?php echo (isset($clean['username']) ? $clean['username'] : ''); ?>" >
 		</div>
-		<?php echo (isset($login_errors['username']) ? '<div class="login-error">'. $login_errors['username'] .'</div>' : ''); ?>
 		<div class="form-item" <?php echo (isset($login_errors['password']) ? 'style="color: #ff0000;"' : ''); ?>>
 			<label for="password">Password:</label>
 			<input type="password" maxlength="20" name="password" id="password" >
 		</div>
-		<?php echo (isset($login_errors['password']) ? '<div class="login-error">'. $login_errors['password'] .'</div>' : ''); ?>
 		<div class="form-item">
 			<label for="remember">&nbsp;</label>
 			<input type="checkbox" name="remember" id="remember" value="yes" >

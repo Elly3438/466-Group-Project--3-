@@ -1,4 +1,8 @@
 <?php
+/** File: begin.php
+ *  Starts session for the user, checks if cookie is set on the users machine and if so, logs them into the database
+ *  Author: Jeffrey Bowden
+ */
 	session_start();
 
 // If the session vars aren't set, try to set them with a cookie

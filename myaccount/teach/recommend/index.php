@@ -1,4 +1,7 @@
-<?php
+<?php /************************************
+--Teacher Recommend Page--
+Author: Jeffrey Bowden
+*****************************************/
 require('../../../includes/common.php');
 require('../../../includes/helpers.inc.php');
 require('../../../includes/begin.php');
@@ -117,7 +120,7 @@ if(isset($_SESSION['username'])){
 		</div>
 <?php }
 else {
-	header('Location: /login/index.php');
+	header('Location: '.BASE_URL.'/login/index.php');
 	exit();
 } ?>
 
