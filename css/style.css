@@ -301,6 +301,35 @@ a:hover{
   cursor:pointer;
 }
 
+#main form.cart{
+  width: 800px;
+}
+
+#main form.cart h1{
+  font-weight: normal;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  text-shadow: white 0.1em 0.1em 0.2em;
+}
+
+#main form.cart input {
+  width: 50px;
+  text-align: right;
+}
+
+#main form.cart table{
+  width: 800px;
+  text-align: right;
+  margin: 20px 0 20px 0;
+}
+
+#main form.cart table tr td{
+  width: 800px;
+  text-align: right;
+}
+
 #footer{
   height: 40px;
   
@@ -470,32 +499,23 @@ a:hover{
 #main .cust-orders .odd{
 	background: #eeeeee;
 }
-/******* Edited by Steven D.  ************/
 
+/******* Edited by Steven D.  ************/
 div.search-prod-view{
-	
 	width:740px;
 	height:900px;
 	
 	margin-left:180px;
 	padding:10px 10px;
-	
-	background-color: #000;
-	
-	
-	
-	
 }
-div.search-narrow-view{
 
+div.search-narrow-view{
 	float:left;
-width:160px;
-height:930px;
-margin:0;
-padding:10px;
-	background-color: #CCCCCC;
-	
-	
+	width:160px;
+	height:930px;
+	margin:0;
+	padding:10px;
+	border-right: 1px solid #999;
 }
 
 div.search-page-content{
@@ -504,28 +524,30 @@ div.search-page-content{
   
   padding:20px auto;
   margin: 0 auto;
-  background-color: #F0f0FF;
   position:relative;
-
 }
+
 div.element
 {
   margin: 2px;
-  border: 1px solid #0000ff;
+  border: 1px solid #000000;
   height: auto;
   width: auto;
   float: left;
   text-align: center;
   position:relative;
   background-color:#f0f0f0;
-}	
+}
+
 div.element img
 {
   display: inline;
   margin: 3px;
   border: 1px solid #ffffff;
 }
-div.element a:hover img {border: 1px solid #0000ff;}
+
+div.element a img {border: 1px solid #000000;}
+
 div.desc
 {
   text-align: center;
@@ -533,63 +555,75 @@ div.desc
   width: 200px;
   margin: 2px;
 }
+
 div.search-pager
 {
-	width:"640px";
-	height:"20px";
-	background-color:#DDD;
+	width:640px;
+	height:20px;
 	clear:all;
-	
-	
 }
-div.product-page-content{
-  width: 900px;
-  height:930px;
-  
-  padding:20px auto;
-  margin: 0 auto;
-  background-color: #F0f0FF;
-  position:relative;
 
-}
-div.container-vi{
-  width: 900px;
-  height:30px;
-  
-  padding:20px auto;
-  margin: 0 auto;
-  background-color: #000;
-  position:relative;
-
-}
 p.title{
 	color:#FFF;
 }
+
+div.product-page-content{
+  width: 700px;
+  padding-top: 20px;
+  
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background: #eee;
+  color: #3e3e3e;
+  margin: 50px auto;
+
+}
+
 div.photo-view{
+  -moz-border-radius: 10px;
+  border-radius: 10px;
   width: 300px;
-  height:300px;
-  float:left;
-  padding:10px;
-  background-color: #FFF;
-  
-}
-
-div.product-info-view{
-  width: 580px;
   height: 300px;
-  margin-left:320px;
+  float: left;
+  margin: 10px;
   padding:10px;
-  background-color: #FFF;
-  float:left;
-
+  background-color: #fff;
 }
-div.product-desc-view {
-  width: 880px;
-  height:320px;
-  
-  padding:10px;
-  background-color: #FFF;
-  clear:both;
-  position:relative;
 
+div.product-name{
+	margin-top: 10px;
+	float: left;
+}
+
+div.product-cost{
+	margin-top: 10px;
+	margin-right: 20px;
+	text-align: right;
+}
+
+div.product-desc-view {
+	width: 340px;
+	float: right;
+	margin-right:20px;
+	margin-top: 10px;
+}
+
+div.product-footer{
+	clear:both;
+	margin: 20px;
+	height: 20px;
+}
+
+div.product-purchase{
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  background: #eee;
+  color: #3e3e3e;
+  float:right;
+}
+
+div.product-purchase form{
+	margin: 0;
+	padding: 0;
+	height: 20px;
 }

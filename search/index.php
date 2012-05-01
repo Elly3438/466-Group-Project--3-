@@ -16,7 +16,7 @@ include('../includes/header.php');
 
 <div class="search-page-content">
 <div style=" float:left;width:100%;">
-<div style="float:left;">	
+<div style="float:left;">
 	<div class = "search-narrow-view">
 	<!--insert javascript product view? -->
 	<?php
@@ -146,7 +146,7 @@ include('../includes/header.php');
 							 
 		?>
 	</div>
-			<div style="width:100%; height:30px;   background-color:#eee">
+			<div class="search-pager">
 				<?php
 				$pgcount = 0;
 				while ($pgcount*9 < $num_rows )

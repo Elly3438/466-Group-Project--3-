@@ -15,14 +15,10 @@ include('../includes/header.php');
 ?>
 	
 	
-	<div class="product-page-content">
-	<div class = "container-vi">
-	</div>
+<div class="product-page-content">
 	<div class = "photo-view">
 		
 		<?php
-		
-		
 		global $dbc;
 	/*	if(!isset($_GET['p7']))
 		{
@@ -38,25 +34,31 @@ include('../includes/header.php');
 							$picpath = ("../photos/". $drow['merch_id'] . ".jpg");
 			 			}
 						echo '<img src="'. $picpath .'" width="300" height="300" />';
-	?>
+		?>
 	</div>
-	<div class = "product-info-view">
-		<?php
-	
-		
-	echo '<h2>'. ($drow['name'])  . '</h2><br> Id'. ($drow['merch_id'])  . '<br> Qty 
-	'. ($drow['has_inventory'])  . '<br>
-	'. ($drow['unit_price'])  . '<br>' ;
-?>
+	<div class = "product-name">
+		<?php echo '<h2>'. ($drow['name'])  . '</h2>'; ?>
+	</div>
+	<div class="product-cost">
+		<?php echo '<h2>$'. ($drow['unit_price'])  . '</h2>'; ?>
 	</div>
 	
 
-	<div class="product-desc-view"> <p>';
+	<div class="product-desc-view"> <p>
 	
-	<?php echo '<p>' . $drow['description'] . '<p>'; ?>
+		<?php echo '<p>' . $drow['description'] . '<p>'; ?>
+	</div>
+	
+	<div class="product-footer"></div>
+	<div class="product-purchase">
+		<form action="/cart/" method="post">
+			<input type="hidden" name="merch_id" value="<?php echo ($drow['merch_id']); ?>" />
+			<input type="text" name="quantity" value="1" />
+			<input type="submit" name="add" value="Purchase" />
+		</form>
+	</div>
 </div>
-</div>	
-	<?php
-include('../includes/footer.php');
 
+<?php
+	include('../includes/footer.php');
 ?>

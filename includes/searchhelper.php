@@ -1,4 +1,3 @@
-
 <?php
 	/* Which page should be 0, unless you are planning on picking a specific page*/
 	function pass_var($value, $var)

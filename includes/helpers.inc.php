@@ -99,9 +99,6 @@ function setLoggedIn($username, $password, $remember){
 		return true;
 	}
 	else {
-		session_start();
-		
-		$_SESSION['loginerror'] = 'There was an error logging you into the system';
 		return false;
 	}
 	
@@ -662,6 +659,31 @@ function get_sum_rentals($order_id){
 	else{
 		$row = mysqli_fetch_object($result);
 		return $row->total;
+	}
+}
+
+/** Get's product info
+ *  Arguments: The product ID
+ *  Author: Lila Papiernik
+ */
+function get_product_info($product_id){
+	global $dbc;
+	
+	$query = 'SELECT * '.
+			 'FROM merch_item '.
+			 'WHERE merch_id = \''. $product_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die ('Error '. mysqli_errno($dbc) .'<br />');
+	}
+	else{
+		if($result->num_rows != 0){
+			$row = mysqli_fetch_object($result);
+			return $row;
+		}else{
+			return NULL;
+		}
 	}
 }
 ?>

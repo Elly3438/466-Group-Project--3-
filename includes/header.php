@@ -31,7 +31,15 @@
 						?>
 					</li>
 					<li>|</li>
-					<li><a href="#">My Cart (0)</a></li>
+					<li><a href="/cart">My Cart 
+						<?php
+							if(isset($_SESSION['cart'])){
+								echo '('.sizeof($_SESSION['cart']).')';
+							}else{
+								echo '(0)';
+							}
+						?>
+					</a></li>
 				</ul>
 			</div>
 		</div>
