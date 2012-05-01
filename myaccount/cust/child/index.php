@@ -207,7 +207,6 @@ if(isset($_SESSION['username'])){
 							<select name="teacher" size="1" id="teacher<?php echo $i; ?>">
 							<option value>--</option>
 							<?php $teacher_id = get_child_teacher($row->child_id);
-							echo $teacher_id;
 							foreach($teacher_list as $teach_id => $teach_name){
 								$teacher_id == $teach_id ? $teachselect = 'selected' : $teachselect = '';
 								echo '<option value="'. $teach_id .'" '. $teachselect .'>'. $teach_name .'</option>';

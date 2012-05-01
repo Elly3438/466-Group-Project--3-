@@ -16,8 +16,6 @@ if(isset($_SESSION['username'])){
 			<ul class="tabs">
 				<li class="tabs-click active" ><a href="./">Account Overview</a></li>
 				<li class="tabs-click" ><a href="./edit/">Edit Account Info</a></li>
-				<li class="tabs-click" ><a href="./orders/">Order History</a></li>
-				<li class="tabs-click" ><a href="./child">Child Info</a></li>
 			</ul>
 		</div>
 		<div id="tab-content" style="width: 800px; margin: 0 auto">
@@ -37,29 +35,6 @@ if(isset($_SESSION['username'])){
 				  <li>Zip Code: <?php echo $account_info->zip; ?></li>
 				  <li>State: <?php echo $account_info->state; ?></li>
 				  <li><div class="edit-link"><a href="./edit/">Edit Account Info &raquo;</a></div></li>
-				 </ul></div>
-				<div class="acc-info"><h2>Child Information</h2>
-				<?php $child_info = get_user_child_info($account_info->u_id, 'user'); 
-				if($child_info->num_rows == 0) {
-					echo 'You currently do not have any children registered.';
-				}
-				else { ?>
-				 <ul>
-					<?php while($row = mysqli_fetch_object($child_info)){ ?>
-						<li>Name: <?php echo $row->firstname .' '. $row->lastname; ?> Age: <?php echo $row->age; ?></li>
-						<?php $child_inst_info = get_current_child_inst_info($row->child_id); 
-						if($child_inst_info->num_rows != 0){
-							while($irow = mysqli_fetch_object($child_inst_info)){ ?>
-							<li>Current Rental Instrument: <?php echo $irow->name; ?></li>
-						<?php }
-						}
-						else{?>
-							<li>No Current Instruments</li>
-					<?php }
-					}
-				}
-				?>
-				   <li><div class="edit-link"><a href="./child/">Add/remove children &raquo;</a></div></li>
 				 </ul></div>
 		</div>
 <?php }

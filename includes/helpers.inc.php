@@ -170,6 +170,8 @@ function processInput($key, $value, $form_values){
 			case 'state':
 				$regular = '/^[A-Z \'.-]+$/i';
 				break;
+			case 'name':
+			case 'district':
 			case 'street1':
 			case 'street2':
 				$regular = '/^[A-Z0-9 \'.-]+$/i';
@@ -237,7 +239,7 @@ function getError($key, $value, $regular, $regular2, $form_values){
 			return $form_values[$key] .' needs to be valid characters and format 888-888-8888<br />';
 		}
 	}
-	elseif($key == 'password1' || $key == 'new-registration' || $key == 'user' || $key == 'address_change' || $key == 'info_change' || $key == 'password_change'){
+	elseif($key == 'password1' || $key == 'new-registration' || $key == 'user' || $key == 'address_change' || $key == 'info_change' || $key == 'add_school' || $key == 'password_change'){
 		return '';
 	}
 	else {
@@ -356,9 +358,18 @@ function get_user_child_info($id, $type){
 				 'WHERE child_id = \''. $id .'\' '.
 				 'AND active = 1';
 	}
+	elseif ($type == 'teacher'){
+		$query = 'SELECT firstname, lastname, age '.
+				 'FROM child AS a '.
+				 'INNER JOIN teacher_child_rel AS b '.
+				 'USING(child_id) '.
+				 'WHERE teacher_u_id = \''. $id .'\' '.
+				 'AND DATE(b.date_end) = \'0000-00-00\' '.
+				 'AND a.active = 1';
+	}
 	$result = mysqli_query($dbc, $query);
 	if(!$result){
-		return 0;
+		die('Error - '. mysqli_errno($dbc));
 	}
 	else {
 		return $result;
@@ -422,7 +433,7 @@ function addChild($u_id, $arr){
 }
 
 /** builds an array of the current teachers in the system
- *  Arguments: the User's username
+ *  Arguments: none
  * Author: Jeffrey Bowden
  */
 function build_teacher_list(){
@@ -440,6 +451,28 @@ function build_teacher_list(){
 		$temparr = array();
 		while($row = mysqli_fetch_object($result)){
 			$temparr[$row->u_id] = $row->firstname .' '. $row->lastname;
+		}
+		return $temparr;
+	}
+}
+/** builds an array of the current schools in the system
+ *  Arguments: none
+ * Author: Jeffrey Bowden
+ */
+function build_school_list(){
+	global $dbc;
+	
+	$query = 'SELECT school_id, name '.
+			 'FROM school;';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die ('Error '. mysqli_errno($dbc) .'<br />');
+	}
+	else {
+		$temparr = array();
+		while($row = mysqli_fetch_object($result)){
+			$temparr[$row->school_id] = $row->name;
 		}
 		return $temparr;
 	}
@@ -661,7 +694,206 @@ function get_sum_rentals($order_id){
 		return $row->total;
 	}
 }
+/** returns school information for a teacher
+ *  Arguments: user's id
+ * Author: Jeffrey Bowden
+ */
+function get_teach_school_info($u_id){
+	global $dbc;
+	
+	$query = 'SELECT a.school_id, name, district, street1, street2, city, zip, state, phone, date_start '.
+			 'FROM school AS a '.
+			 'INNER JOIN teach_school_rel AS b '.
+			 'USING(school_id) '.
+			 'WHERE b.u_id = \''. $u_id .'\' '.
+			 'AND DATE(b.date_end) = \'0000-00-00\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	else{
+		return $result;
+	}
+	
+}
+/** Adds a school to the database
+ *  Arguments: An array of input values
+ * Author: Jeffrey Bowden
+ */
+function addSchool($arr){
+	global $dbc;
 
+	$query = 'INSERT INTO school (
+				name,
+				district,
+				street1,
+				street2,
+				city,
+				zip,
+				state,
+				phone
+			)
+			VALUES (
+				\''. $arr['name'] .'\',
+				\''. $arr['district'] .'\',
+				\''. $arr['street1'] .'\',
+				\''. $arr['street2'] .'\',
+				\''. $arr['city'] .'\',
+				\''. $arr['zip'] .'\',
+				\''. $arr['state'] .'\',
+				\''. $arr['phone'] .'\' )';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - not added to database'. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully added'. $arr['name'] .'to the database!<br />';
+	}
+	
+	return $msg;
+}
+/** updates a teacher's current school
+ *  Arguments: user's id, school id and if the update is new or update
+ *  Author: Jeffrey Bowden
+ */
+function close_school_rel($u_id){
+	global $dbc;
+	
+	$query = 'UPDATE teach_school_rel SET '.
+			 'date_end = CURDATE() '.
+			 'WHERE u_id = \''. $u_id .'\' '.
+			 'AND DATE(date_end) = \'0000-00-00\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc) .'<br />');
+	}
+}
+/** updates a teacher's current school
+ *  Arguments: user's id, school id and if the update is new or update
+ *  Author: Jeffrey Bowden
+ */
+function updateSchool($u_id, $school_id, $type){
+	global $dbc;
+	
+	if($type =='update'){
+		close_school_rel($u_id);
+	}
+	$query = 'INSERT INTO teach_school_rel (
+					u_id,
+					school_id,
+					date_start,
+					date_end
+				 )
+				 VALUES (
+				 	\''. $u_id .'\',
+				 	\''. $school_id .'\',
+				 	CURDATE(),
+				 	\'0000-00-00\' )';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - not added to database'. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully updated your current school.<br />';
+	}
+	
+	return $msg;
+	
+}
+/** returns the teacher's current recommended products
+ *  Arguments: user's id
+ *  Author: Jeffrey Bowden
+ */
+function get_teach_recommend($u_id){
+	global $dbc;
+	
+	$query = 'SELECT a.merch_id, name '.
+			 'FROM teach_req AS a '.
+			 'INNER JOIN merch_item AS b '.
+			 'USING(merch_id) '.
+			 'WHERE a.u_id = \''. $u_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	else{
+		return $result;
+	}
+	
+}
+/** deletes a teacher/acc relation
+ *  Arguments: user's id and merch id to remove
+ *  Author: Jeffrey Bowden
+ */
+function deleteTeachAcc($u_id, $merch_id){
+	global $dbc;
+	
+	$query = 'DELETE FROM teach_req '.
+			 'WHERE u_id = \''. $u_id .'\' '.
+			 'AND merch_id = \''. $merch_id .'\';';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die('Error - '. mysqli_errno($dbc));
+	}
+	
+}
+/** returns an accessory list for a teacher to add accessories from
+ *  Arguments: user's id
+ *  Author: Jeffrey Bowden
+ */
+function build_acc_list($u_id){
+	global $dbc;
+	
+	$query = 'SELECT merch_id, name '.
+			 'FROM merch_item AS a '.
+			 'WHERE a.category_name = \'Accessory\' '.
+			 'AND NOT EXISTS ( '.
+				'SELECT merch_id FROM teach_req AS b '.
+				'WHERE a.merch_id = b.merch_id AND b.u_id = \''. $u_id .'\' ) ';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		die ('Error '. mysqli_errno($dbc) .'<br />');
+	}
+	else {
+		$temparr = array();
+		while($row = mysqli_fetch_object($result)){
+			$temparr[$row->merch_id] = $row->name;
+		}
+		return $temparr;
+	}
+}
+/** adds an accessory to a teacher's recommended list
+ *  Arguments: user's id, merch id
+ *  Author: Jeffrey Bowden
+ */
+function addAcc($u_id, $merch_id){
+	global $dbc;
+	
+	$query = 'INSERT INTO teach_req (
+				u_id,
+				merch_id
+			  )
+			  VALUES (
+			  	\''. $u_id .'\',
+			  	\''. $merch_id .'\' )';
+	
+	$result = mysqli_query($dbc, $query);
+	if(!$result){
+		$msg = 'Error - not added to database'. mysqli_errno($dbc) .'<br />';
+	}
+	else {
+		$msg = 'Successfully updated your current school.<br />';
+	}
+	
+	return $msg;
+}
 /** Get's product info
  *  Arguments: The product ID
  *  Author: Lila Papiernik

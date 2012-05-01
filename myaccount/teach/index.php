@@ -16,8 +16,8 @@ if(isset($_SESSION['username'])){
 			<ul class="tabs">
 				<li class="tabs-click active" ><a href="./">Account Overview</a></li>
 				<li class="tabs-click" ><a href="./edit/">Edit Account Info</a></li>
-				<li class="tabs-click" ><a href="./orders/">Order History</a></li>
-				<li class="tabs-click" ><a href="./child">Child Info</a></li>
+				<li class="tabs-click" ><a href="./school/">School Information</a></li>
+				<li class="tabs-click" ><a href="./recommend/">Recommendations</a></li>
 			</ul>
 		</div>
 		<div id="tab-content" style="width: 800px; margin: 0 auto">
@@ -38,28 +38,38 @@ if(isset($_SESSION['username'])){
 				  <li>State: <?php echo $account_info->state; ?></li>
 				  <li><div class="edit-link"><a href="./edit/">Edit Account Info &raquo;</a></div></li>
 				 </ul></div>
-				<div class="acc-info"><h2>Child Information</h2>
-				<?php $child_info = get_user_child_info($account_info->u_id, 'user'); 
+				<div class="acc-info"><h2>Current Children Taught</h2>
+				<?php $child_info = get_user_child_info($account_info->u_id, 'teacher'); 
 				if($child_info->num_rows == 0) {
-					echo 'You currently do not have any children registered.';
+					echo 'You currently are not teaching any children.';
 				}
 				else { ?>
 				 <ul>
 					<?php while($row = mysqli_fetch_object($child_info)){ ?>
 						<li>Name: <?php echo $row->firstname .' '. $row->lastname; ?> Age: <?php echo $row->age; ?></li>
-						<?php $child_inst_info = get_current_child_inst_info($row->child_id); 
-						if($child_inst_info->num_rows != 0){
-							while($irow = mysqli_fetch_object($child_inst_info)){ ?>
-							<li>Current Rental Instrument: <?php echo $irow->name; ?></li>
-						<?php }
+						<?php
 						}
-						else{?>
-							<li>No Current Instruments</li>
-					<?php }
-					}
 				}
 				?>
-				   <li><div class="edit-link"><a href="./child/">Add/remove children &raquo;</a></div></li>
+				 </ul></div>
+				 <div class="acc-info"><h2>Current School</h2>
+				 <?php $school_info = get_teach_school_info($account_info->u_id); 
+				 if($school_info->num_rows == 0){
+				 	echo 'You currently are not assigned to a school.';
+				 }
+				 else{ 
+				 	$school_info = mysqli_fetch_object($school_info); ?>
+				 <ul>
+				 	<li>School Name: <?php echo $school_info->name; ?></li>
+				 	<li>District: <?php echo $school_info->district; ?></li>
+				 	<li>Street 1: <?php echo $school_info->street1; ?></li>
+				 	<li>Street 2: <?php echo $school_info->street2; ?></li>
+				 	<li>City: <?php echo $school_info->city; ?></li>
+				 	<li>State: <?php echo $school_info->state; ?></li>
+				 	<li>Zip Code: <?php echo $school_info->zip; ?></li>
+				 	<li>Phone Number: <?php echo $school_info->phone; ?></li>
+				 	<li>Date Started: <?php echo $school_info->date_start; ?></li>
+			<?php }?>
 				 </ul></div>
 		</div>
 <?php }

@@ -476,7 +476,7 @@ a:hover{
 	margin: 0;
 }
 
-#main .child-instrument h2{
+#main .child-instrument h2, .school-list-box h2, #main .acc-info h2{
 	font-size: 16px;
 }
 
